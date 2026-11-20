@@ -1,0 +1,1363 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SnapFrame — Portfolio Thumbnail Studio</title>
+  <style>
+    :root {
+      --bg-app: #f3f5f9;
+      --bg-surface: #ffffff;
+      --bg-soft: #f8fafc;
+      --border: #e2e8f0;
+      --text: #0f172a;
+      --muted: #64748b;
+      --accent: #7c3aed;
+      --accent-soft: #f5f3ff;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Inter", "Segoe UI", sans-serif;
+      background: var(--bg-app);
+      color: var(--text);
+      height: 100vh;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+    @media (max-width: 960px) {
+      body { height: auto; overflow: auto; }
+    }
+
+    /* Top Studio Bar */
+    header {
+      height: 58px;
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 0 18px;
+      background: var(--bg-surface);
+      border-bottom: 1px solid var(--border);
+    }
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .logo {
+      width: 32px;
+      height: 32px;
+      border-radius: 9px;
+      background: linear-gradient(135deg, #7c3aed, #2563eb);
+      display: grid;
+      place-items: center;
+      font-weight: 800;
+      font-size: 13px;
+      color: #fff;
+      box-shadow: 0 4px 12px rgba(124, 58, 237, 0.25);
+    }
+    .brand h1 { margin: 0; font-size: 15px; font-weight: 700; letter-spacing: -0.02em; }
+    .brand span { font-size: 11px; color: var(--muted); display: block; }
+
+    .top-actions {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+    button, select {
+      border: 1px solid var(--border);
+      background: var(--bg-surface);
+      color: var(--text);
+      padding: 7px 12px;
+      border-radius: 9px;
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.15s ease;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+    button:hover, select:hover { border-color: #cbd5e1; background: var(--bg-soft); }
+    button.btn-ai {
+      background: var(--accent-soft);
+      border-color: #ddd6fe;
+      color: #6d28d9;
+    }
+    button.btn-ai:hover { background: #ede9fe; }
+    button.primary {
+      background: #0f172a;
+      border-color: #0f172a;
+      color: #ffffff;
+    }
+    button.primary:hover { background: #1e293b; }
+
+    /* Workspace: Left Rail + Clean Inspector + Canvas Stage */
+    .studio {
+      flex: 1;
+      min-height: 0;
+      display: grid;
+      grid-template-columns: 68px 340px 1fr;
+    }
+    @media (max-width: 960px) {
+      .studio { grid-template-columns: 1fr; }
+    }
+
+    .rail {
+      background: var(--bg-surface);
+      border-right: 1px solid var(--border);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 14px 8px;
+      gap: 8px;
+    }
+    @media (max-width: 960px) {
+      .rail {
+        flex-direction: row;
+        justify-content: center;
+        border-right: none;
+        border-bottom: 1px solid var(--border);
+        padding: 8px;
+      }
+    }
+    .rail-btn {
+      width: 52px;
+      height: 52px;
+      padding: 4px;
+      border-radius: 12px;
+      border: 1px solid transparent;
+      background: transparent;
+      color: var(--muted);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 4px;
+      font-size: 10.5px;
+      font-weight: 600;
+    }
+    .rail-btn:hover { background: var(--bg-soft); color: var(--text); border-color: transparent; }
+    .rail-btn.active {
+      background: var(--accent-soft);
+      color: var(--accent);
+      border-color: #ddd6fe;
+    }
+
+    /* Clean Inspector Panel */
+    .drawer {
+      background: var(--bg-surface);
+      border-right: 1px solid var(--border);
+      padding: 18px 16px;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+    }
+    @media (max-width: 960px) {
+      .drawer { border-right: none; border-top: 1px solid var(--border); order: 3; }
+    }
+    .tab-pane { display: none; flex-direction: column; gap: 18px; }
+    .tab-pane.active { display: flex; }
+
+    .sec-title {
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--text);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 10px;
+    }
+    .sec-sub {
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--muted);
+    }
+
+    /* Segmented Tabs */
+    .seg {
+      display: grid;
+      grid-auto-flow: column;
+      grid-auto-columns: 1fr;
+      gap: 4px;
+      background: var(--bg-app);
+      padding: 4px;
+      border-radius: 10px;
+    }
+    .seg button {
+      border: none;
+      background: transparent;
+      color: var(--muted);
+      justify-content: center;
+      padding: 6px 8px;
+      font-size: 11.5px;
+      border-radius: 7px;
+    }
+    .seg button.active {
+      background: var(--bg-surface);
+      color: var(--text);
+      box-shadow: 0 1px 3px rgba(15, 23, 42, 0.08);
+    }
+
+    /* Canva Color Stop Header (Rainbow + Eyedropper + Stops) */
+    .canva-stops-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 12px;
+    }
+    .circle-btn {
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      padding: 0;
+      display: grid;
+      place-items: center;
+      cursor: pointer;
+      border: 1.5px solid var(--border);
+      background: #fff;
+      transition: transform 0.12s ease, box-shadow 0.12s ease;
+    }
+    .circle-btn:hover { transform: scale(1.06); }
+    .rainbow-btn {
+      border: none;
+      background: conic-gradient(#ef4444, #f59e0b, #10b981, #06b6d4, #3b82f6, #8b5cf6, #ec4899, #ef4444);
+      padding: 2.5px;
+    }
+    .rainbow-inner {
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
+      background: #fff;
+      display: grid;
+      place-items: center;
+      color: var(--text);
+      font-size: 16px;
+      font-weight: 500;
+      line-height: 1;
+    }
+    .stop-dot {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      border: 2px solid #fff;
+      box-shadow: 0 0 0 1px #cbd5e1;
+      cursor: pointer;
+      transition: transform 0.12s ease;
+    }
+    .stop-dot.active {
+      box-shadow: 0 0 0 2px #fff, 0 0 0 4px var(--accent);
+      transform: scale(1.05);
+    }
+    .stop-label {
+      font-size: 11px;
+      color: var(--muted);
+      margin-left: auto;
+      font-weight: 600;
+    }
+
+    /* Canva Floating Color Picker Card */
+    .picker-card {
+      background: #ffffff;
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 12px;
+      box-shadow: 0 10px 30px rgba(15, 23, 42, 0.08);
+      display: flex;
+      flex-direction: column;
+      gap: 11px;
+    }
+    .sv-box {
+      position: relative;
+      width: 100%;
+      height: 145px;
+      border-radius: 10px;
+      cursor: crosshair;
+      overflow: hidden;
+      touch-action: none;
+    }
+    .sv-handle {
+      position: absolute;
+      width: 16px;
+      height: 16px;
+      border-radius: 50%;
+      border: 2.5px solid #fff;
+      box-shadow: 0 0 0 1.5px rgba(15, 23, 42, 0.4), 0 2px 6px rgba(0, 0, 0, 0.35);
+      transform: translate(-50%, -50%);
+      pointer-events: none;
+    }
+    .hue-bar {
+      position: relative;
+      width: 100%;
+      height: 14px;
+      border-radius: 999px;
+      background: linear-gradient(to right, #ff0000, #ffff00, #00ff00, #00ffff, #0000ff, #ff00ff, #ff0000);
+      cursor: pointer;
+      touch-action: none;
+    }
+    .hue-handle {
+      position: absolute;
+      top: 50%;
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      border: 2.5px solid #fff;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.35);
+      transform: translate(-50%, -50%);
+      pointer-events: none;
+    }
+    .hex-row {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+    }
+    .hex-pill {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 6px 10px;
+      background: var(--bg-soft);
+    }
+    .hex-dot {
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      border: 1px solid rgba(0,0,0,0.12);
+      flex-shrink: 0;
+    }
+    .hex-pill input {
+      width: 100%;
+      border: none;
+      background: transparent;
+      font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text);
+      outline: none;
+      text-transform: uppercase;
+    }
+
+    /* Photo Colours & Preset Swatches */
+    .photo-colors {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+    .photo-dot {
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      border: 2px solid #fff;
+      box-shadow: 0 0 0 1px #cbd5e1;
+      cursor: pointer;
+      transition: transform 0.12s ease;
+    }
+    .photo-dot:hover { transform: scale(1.1); }
+
+    .preset-grid {
+      display: grid;
+      grid-template-columns: repeat(6, 1fr);
+      gap: 8px;
+    }
+    .preset-swatch {
+      aspect-ratio: 1;
+      border-radius: 10px;
+      border: 2px solid #fff;
+      box-shadow: 0 0 0 1px #e2e8f0;
+      cursor: pointer;
+      transition: transform 0.12s ease;
+    }
+    .preset-swatch:hover { transform: scale(1.08); }
+    .preset-swatch.active { box-shadow: 0 0 0 2px var(--accent); }
+
+    /* Sliders & Inputs */
+    .slider-box { display: flex; flex-direction: column; gap: 6px; }
+    .slider-top {
+      display: flex;
+      justify-content: space-between;
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--text);
+    }
+    .slider-top span:last-child {
+      font-family: ui-monospace, Menlo, monospace;
+      font-size: 11px;
+      color: var(--muted);
+    }
+    input[type="range"] {
+      width: 100%;
+      accent-color: var(--accent);
+      cursor: pointer;
+    }
+    .text-in {
+      width: 100%;
+      background: var(--bg-soft);
+      border: 1px solid var(--border);
+      color: var(--text);
+      padding: 9px 11px;
+      border-radius: 10px;
+      font-size: 12.5px;
+      outline: none;
+    }
+    .text-in:focus { border-color: var(--accent); background: #fff; }
+
+    /* Clean Studio Stage */
+    main {
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+      gap: 14px;
+      overflow: hidden;
+      background-color: #eef2f7;
+      background-image: radial-gradient(#cbd5e1 1px, transparent 1px);
+      background-size: 20px 20px;
+    }
+    @media (max-width: 960px) {
+      main { padding: 14px; order: 2; }
+    }
+    .stage-wrap {
+      width: 100%;
+      max-width: 860px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 12px;
+    }
+    canvas {
+      width: 100%;
+      max-height: calc(100vh - 165px);
+      object-fit: contain;
+      height: auto;
+      border-radius: 14px;
+      box-shadow: 0 20px 55px rgba(15, 23, 42, 0.16);
+      cursor: grab;
+      touch-action: none;
+    }
+    canvas:active { cursor: grabbing; }
+
+    .stage-bar {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      background: rgba(255, 255, 255, 0.92);
+      backdrop-filter: blur(8px);
+      border: 1px solid var(--border);
+      padding: 6px 10px;
+      border-radius: 12px;
+      font-size: 11.5px;
+      color: var(--muted);
+      box-shadow: 0 4px 16px rgba(15, 23, 42, 0.06);
+    }
+    .stage-bar button { padding: 5px 10px; font-size: 11px; border-radius: 7px; }
+    input[type="file"] { display: none; }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="brand">
+      <div class="logo">SF</div>
+      <div>
+        <h1>SnapFrame</h1>
+        <span>Paste (Ctrl+V) or Upload Screenshot</span>
+      </div>
+    </div>
+
+    <div class="top-actions">
+      <button onclick="document.getElementById('fileIn').click()">+ Upload Image</button>
+      <button class="btn-ai" onclick="smartAutoColor()" title="Automatically choose best matching colors from screenshot">
+        ✦ Smart Auto-Color
+      </button>
+      <select id="ratioSel" onchange="setRatio(this.value)">
+        <option value="1600x1000">16:10 · Portfolio</option>
+        <option value="1920x1080">16:9 · LinkedIn</option>
+        <option value="1600x1200">4:3 · Classic</option>
+        <option value="1400x1400">1:1 · Square</option>
+      </select>
+      <button onclick="copyPng()" id="copyBtn">Copy PNG</button>
+      <button class="primary" onclick="downloadPng()">Download PNG</button>
+    </div>
+    <input id="fileIn" type="file" accept="image/*" />
+  </header>
+
+  <div class="studio">
+    <!-- Left Canva-style Navigation Rail -->
+    <nav class="rail">
+      <button class="rail-btn active" onclick="openTab('colors', this)">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="13.5" cy="6.5" r="2.5"/><circle cx="17.5" cy="10.5" r="2.5"/><circle cx="8.5" cy="7.5" r="2.5"/><circle cx="6.5" cy="12.5" r="2.5"/><path d="M12 22c5.5 0 10-4.5 10-10S17.5 2 12 2 2 6.5 2 12c0 2.8 1.5 5 4 5h1.5c1.4 0 2.5 1.1 2.5 2.5 0 1.4 1.1 2.5 2 2.5z"/></svg>
+        Colour
+      </button>
+      <button class="rail-btn" onclick="openTab('frame', this)">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="3"/><path d="M9 3v18"/></svg>
+        Frame
+      </button>
+      <button class="rail-btn" onclick="openTab('labels', this)">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 7V4h16v3"/><path d="M9 20h6"/><path d="M12 4v16"/></svg>
+        Text
+      </button>
+    </nav>
+
+    <!-- Inspector Drawer -->
+    <aside class="drawer">
+      <!-- TAB 1: CANVA COLOUR PICKER & PHOTO COLOURS -->
+      <div class="tab-pane active" id="tab-colors">
+        <div class="seg">
+          <button class="active" data-bgmode="gradient" onclick="setBgMode('gradient', this)">Gradient</button>
+          <button data-bgmode="mesh" onclick="setBgMode('mesh', this)">Mesh</button>
+          <button data-bgmode="solid" onclick="setBgMode('solid', this)">Solid</button>
+        </div>
+
+        <!-- Canva Stops Bar -->
+        <div>
+          <div class="sec-title">
+            <span>Document colours</span>
+            <button style="padding:3px 8px;font-size:11px;" onclick="swapColors()">Swap ⇄</button>
+          </div>
+          <div class="canva-stops-row">
+            <button class="circle-btn rainbow-btn" title="Custom Colour Picker" onclick="togglePicker()">
+              <span class="rainbow-inner">+</span>
+            </button>
+            <button class="circle-btn" title="Eyedropper (Pick colour from screen or image)" onclick="activateEyedropper()">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="m2 22 1-1h3l9-9"/><path d="M3 21v-3l9-9"/><path d="m15 6 3.4-3.4a2.1 2.1 0 1 1 3 3L18 9l.4.4a2.1 2.1 0 1 1-3 3l-3.8-3.8a2.1 2.1 0 1 1 3-3l.4.4Z"/></svg>
+            </button>
+            <button class="stop-dot active" id="dot-c1" title="Color 1" onclick="selectStop('c1')"></button>
+            <button class="stop-dot" id="dot-c2" title="Color 2" onclick="selectStop('c2')"></button>
+            <button class="stop-dot" id="dot-c3" title="Mesh Glow" style="display:none;" onclick="selectStop('c3')"></button>
+            <span class="stop-label" id="activeStopLbl">Editing: Color 1</span>
+          </div>
+
+          <!-- Canva 2D HSV Picker Card -->
+          <div class="picker-card" id="pickerCard">
+            <div class="sv-box" id="svBox">
+              <div class="sv-handle" id="svHandle"></div>
+            </div>
+            <div class="hue-bar" id="hueBar">
+              <div class="hue-handle" id="hueHandle"></div>
+            </div>
+            <div class="hex-row">
+              <div class="hex-pill">
+                <div class="hex-dot" id="hexDot"></div>
+                <input type="text" id="hexIn" value="#10B981" maxlength="7" oninput="onHexTyped(this.value)" />
+              </div>
+              <button class="circle-btn" style="border-radius:10px;width:36px;height:36px;" title="Pick colour" onclick="activateEyedropper()">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m2 22 1-1h3l9-9"/><path d="M3 21v-3l9-9"/><path d="m15 6 3.4-3.4a2.1 2.1 0 1 1 3 3L18 9l.4.4a2.1 2.1 0 1 1-3 3l-3.8-3.8a2.1 2.1 0 1 1 3-3l.4.4Z"/></svg>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Auto-Extracted Photo Colours -->
+        <div id="photoSection" style="display:none;">
+          <div class="sec-title">
+            <span>Photo colours</span>
+            <span class="sec-sub">From your screenshot</span>
+          </div>
+          <div class="photo-colors" id="photoDots"></div>
+        </div>
+
+        <!-- Fresh Presets -->
+        <div>
+          <div class="sec-title">
+            <span>Fresh palettes</span>
+            <button style="padding:3px 8px;font-size:11px;" onclick="randomPalette()">Shuffle</button>
+          </div>
+          <div class="preset-grid" id="presetGrid"></div>
+        </div>
+
+        <div class="slider-box" id="angleWrap">
+          <div class="slider-top"><span>Gradient Angle</span><span id="angleVal">135°</span></div>
+          <input type="range" id="angleIn" min="0" max="360" value="135" oninput="state.angle=+this.value; render();" />
+        </div>
+
+        <div>
+          <div class="sec-title"><span>Backdrop Finish</span></div>
+          <div class="seg">
+            <button class="active" data-tex="glow" onclick="setTex('glow', this)">Sheen</button>
+            <button data-tex="dots" onclick="setTex('dots', this)">Dots</button>
+            <button data-tex="grid" onclick="setTex('grid', this)">Grid</button>
+            <button data-tex="none" onclick="setTex('none', this)">Flat</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- TAB 2: FRAME & LAYOUT -->
+      <div class="tab-pane" id="tab-frame">
+        <div>
+          <div class="sec-title"><span>Card Layout</span></div>
+          <div class="seg">
+            <button class="active" data-layout="offset" onclick="setLayout('offset', this)">Offset</button>
+            <button data-layout="float" onclick="setLayout('float', this)">Center</button>
+            <button data-layout="browser" onclick="setLayout('browser', this)">Browser</button>
+            <button data-layout="macos" onclick="setLayout('macos', this)">macOS</button>
+          </div>
+        </div>
+
+        <div class="slider-box">
+          <div class="slider-top"><span>Zoom</span><span id="zoomVal">1.00x</span></div>
+          <input type="range" id="zoomIn" min="0.85" max="2.4" step="0.02" value="1.0" oninput="state.zoom=+this.value; render();" />
+        </div>
+
+        <div class="slider-box">
+          <div class="slider-top"><span>Backdrop Margin</span><span id="padVal">140px</span></div>
+          <input type="range" id="padIn" min="40" max="260" step="5" value="140" oninput="state.pad=+this.value; render();" />
+        </div>
+
+        <div class="slider-box">
+          <div class="slider-top"><span>Corner Radius</span><span id="radVal">26px</span></div>
+          <input type="range" id="radIn" min="0" max="44" step="2" value="26" oninput="state.radius=+this.value; render();" />
+        </div>
+
+        <div class="slider-box">
+          <div class="slider-top"><span>Drop Shadow</span><span id="shVal">45px</span></div>
+          <input type="range" id="shIn" min="0" max="80" step="2" value="45" oninput="state.shadow=+this.value; render();" />
+        </div>
+
+        <div>
+          <div class="sec-title"><span>Frame Border</span></div>
+          <div class="seg">
+            <button class="active" data-border="glass" onclick="setBorder('glass', this)">Glass</button>
+            <button data-border="light" onclick="setBorder('light', this)">White</button>
+            <button data-border="dark" onclick="setBorder('dark', this)">Dark</button>
+            <button data-border="none" onclick="setBorder('none', this)">None</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- TAB 3: TEXT & WATERMARK -->
+      <div class="tab-pane" id="tab-labels">
+        <div>
+          <div class="sec-title"><span>Window Header (Browser / macOS)</span></div>
+          <div style="display:flex;flex-direction:column;gap:8px;">
+            <input class="text-in" type="text" placeholder="Project Title (e.g. RepPYQ)" oninput="state.winTitle=this.value; render();" />
+            <input class="text-in" type="text" placeholder="URL / Subtitle (e.g. reppyq.vercel.app)" oninput="state.winUrl=this.value; render();" />
+          </div>
+        </div>
+
+        <div>
+          <div class="sec-title"><span>Corner Pill Badge (Optional)</span></div>
+          <input class="text-in" type="text" placeholder="e.g. pushkarez.vercel.app" oninput="state.badgeText=this.value; render();" />
+        </div>
+
+        <div>
+          <div class="sec-title"><span>Badge Position</span></div>
+          <div class="seg">
+            <button class="active" data-bpos="tl" onclick="setBadgePos('tl', this)">Top-Left</button>
+            <button data-bpos="bl" onclick="setBadgePos('bl', this)">Bottom-Left</button>
+            <button data-bpos="br" onclick="setBadgePos('br', this)">Bottom-Right</button>
+          </div>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Studio Canvas -->
+    <main id="dropZone">
+      <div class="stage-wrap">
+        <canvas id="cv" width="1600" height="1000"></canvas>
+        <div class="stage-bar" id="stageBar">
+          <span>Drag image to pan</span>
+          <span>·</span>
+          <button onclick="alignTopLeft()">Snap Top-Left</button>
+          <button onclick="resetPan()">Center</button>
+          <button onclick="stepZoom(-0.08)">Zoom −</button>
+          <button onclick="stepZoom(0.08)">Zoom +</button>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <script>
+    const PRESETS = [
+      ["#10b981", "#047857", "#34d399"], // Fresh Emerald
+      ["#8b5cf6", "#4338ca", "#c084fc"], // Electric Violet
+      ["#38bdf8", "#1d4ed8", "#60a5fa"], // CipherX Blue
+      ["#fb923c", "#ea580c", "#fde047"], // Vivid Sunset
+      ["#06b6d4", "#0f766e", "#5eead4"], // Aqua Teal
+      ["#f43f5e", "#be123c", "#fb7185"], // Coral Rose
+      ["#f59e0b", "#b45309", "#fcd34d"], // Warm Amber
+      ["#ec4899", "#7e22ce", "#f472b6"], // Berry Pop
+      ["#22d3ee", "#2563eb", "#818cf8"], // Ocean Sky
+      ["#6366f1", "#1e1b4b", "#a5b4fc"], // Deep Indigo
+      ["#0f172a", "#1e293b", "#38bdf8"], // Slate Night
+      ["#e2e8f0", "#cbd5e1", "#94a3b8"], // Minimal Light
+    ];
+
+    const state = {
+      width: 1600,
+      height: 1000,
+      bgMode: "gradient",
+      c1: "#38bdf8",
+      c2: "#1d4ed8",
+      c3: "#60a5fa",
+      solid: "#3b82f6",
+      activeStop: "c1", // 'c1' | 'c2' | 'c3' | 'solid'
+      hsv: { h: 199, s: 0.77, v: 0.97 },
+      angle: 135,
+      texture: "glow",
+      layout: "offset",
+      zoom: 1.0,
+      pad: 140,
+      radius: 26,
+      shadow: 45,
+      borderMode: "glass",
+      panX: 0,
+      panY: 99999,
+      winTitle: "My Project",
+      winUrl: "pushkarez.vercel.app",
+      badgeText: "",
+      badgePos: "tl",
+      photoColors: [],
+      pickingCanvasColor: false,
+      img: null,
+    };
+
+    const cv = document.getElementById("cv");
+    const ctx = cv.getContext("2d");
+
+    // --- Color Math Helpers (HSV <-> RGB <-> Hex) ---
+    function hexToRgb(hex) {
+      const m = /^#?([0-9a-f]{6})$/i.exec(hex.trim());
+      if (!m) return [59, 130, 246];
+      const n = parseInt(m[1], 16);
+      return [(n >> 16) & 255, (n >> 8) & 255, n & 255];
+    }
+
+    function rgbToHex(r, g, b) {
+      const h = (x) => Math.max(0, Math.min(255, Math.round(x))).toString(16).padStart(2, "0");
+      return `#${h(r)}${h(g)}${h(b)}`;
+    }
+
+    function rgbToHsv(r, g, b) {
+      r /= 255; g /= 255; b /= 255;
+      const max = Math.max(r, g, b), min = Math.min(r, g, b);
+      const d = max - min;
+      let h = 0;
+      if (d !== 0) {
+        if (max === r) h = ((g - b) / d) % 6;
+        else if (max === g) h = (b - r) / d + 2;
+        else h = (r - g) / d + 4;
+        h = Math.round(h * 60);
+        if (h < 0) h += 360;
+      }
+      const s = max === 0 ? 0 : d / max;
+      return { h, s, v: max };
+    }
+
+    function hsvToRgb(h, s, v) {
+      const c = v * s;
+      const x = c * (1 - Math.abs(((h / 60) % 2) - 1));
+      const m = v - c;
+      let r = 0, g = 0, b = 0;
+      if (h < 60) [r, g, b] = [c, x, 0];
+      else if (h < 120) [r, g, b] = [x, c, 0];
+      else if (h < 180) [r, g, b] = [0, c, x];
+      else if (h < 240) [r, g, b] = [0, x, c];
+      else if (h < 300) [r, g, b] = [x, 0, c];
+      else [r, g, b] = [c, 0, x];
+      return [(r + m) * 255, (g + m) * 255, (b + m) * 255];
+    }
+
+    function hslToHex(h, s, l) {
+      s /= 100; l /= 100;
+      const k = (n) => (n + h / 30) % 12;
+      const a = s * Math.min(l, 1 - l);
+      const f = (n) => l - a * Math.max(-1, Math.min(k(n) - 3, Math.min(9 - k(n), 1)));
+      return rgbToHex(f(0) * 255, f(8) * 255, f(4) * 255);
+    }
+
+    // --- Canva HSV Picker Sync ---
+    function updatePickerUI() {
+      const { h, s, v } = state.hsv;
+      const [r, g, b] = hsvToRgb(h, s, v);
+      const hex = rgbToHex(r, g, b);
+
+      const svBox = document.getElementById("svBox");
+      svBox.style.background = `
+        linear-gradient(to top, #000, transparent),
+        linear-gradient(to right, #fff, hsl(${h}, 100%, 50%))
+      `;
+
+      const svHandle = document.getElementById("svHandle");
+      svHandle.style.left = (s * 100) + "%";
+      svHandle.style.top = ((1 - v) * 100) + "%";
+      svHandle.style.background = hex;
+
+      const hueHandle = document.getElementById("hueHandle");
+      hueHandle.style.left = ((h / 360) * 100) + "%";
+      hueHandle.style.background = `hsl(${h}, 100%, 50%)`;
+
+      document.getElementById("hexIn").value = hex.toUpperCase();
+      document.getElementById("hexDot").style.background = hex;
+
+      document.getElementById("dot-c1").style.background = state.bgMode === "solid" ? state.solid : state.c1;
+      document.getElementById("dot-c2").style.background = state.c2;
+      document.getElementById("dot-c3").style.background = state.c3;
+    }
+
+    function applyHexToActiveStop(hex) {
+      if (state.bgMode === "solid") state.solid = hex;
+      else state[state.activeStop] = hex;
+
+      const [r, g, b] = hexToRgb(hex);
+      state.hsv = rgbToHsv(r, g, b);
+      updatePickerUI();
+      render();
+    }
+
+    function selectStop(stopKey) {
+      state.activeStop = stopKey;
+      ["c1", "c2", "c3"].forEach((k) => {
+        document.getElementById("dot-" + k).classList.toggle("active", k === stopKey);
+      });
+      const lblMap = { c1: "Color 1", c2: "Color 2", c3: "Mesh Glow", solid: "Solid Colour" };
+      document.getElementById("activeStopLbl").textContent = "Editing: " + lblMap[stopKey];
+
+      const hex = stopKey === "solid" ? state.solid : state[stopKey];
+      const [r, g, b] = hexToRgb(hex);
+      state.hsv = rgbToHsv(r, g, b);
+      updatePickerUI();
+    }
+
+    function togglePicker() {
+      const card = document.getElementById("pickerCard");
+      card.style.display = card.style.display === "none" ? "flex" : "none";
+    }
+
+    function onHexTyped(val) {
+      const clean = val.startsWith("#") ? val : "#" + val;
+      if (/^#[0-9A-Fa-f]{6}$/.test(clean)) {
+        applyHexToActiveStop(clean);
+      }
+    }
+
+    // 2D SV Dragging
+    const svBox = document.getElementById("svBox");
+    function handleSV(e) {
+      const rect = svBox.getBoundingClientRect();
+      const s = Math.max(0, Math.min(1, (e.clientX - rect.left) / rect.width));
+      const v = Math.max(0, Math.min(1, 1 - (e.clientY - rect.top) / rect.height));
+      state.hsv.s = s;
+      state.hsv.v = v;
+      const [r, g, b] = hsvToRgb(state.hsv.h, s, v);
+      const hex = rgbToHex(r, g, b);
+      if (state.bgMode === "solid") state.solid = hex;
+      else state[state.activeStop] = hex;
+      updatePickerUI();
+      render();
+    }
+    let svDrag = false;
+    svBox.addEventListener("pointerdown", (e) => { svDrag = true; svBox.setPointerCapture(e.pointerId); handleSV(e); });
+    svBox.addEventListener("pointermove", (e) => { if (svDrag) handleSV(e); });
+    svBox.addEventListener("pointerup", () => { svDrag = false; });
+
+    // Hue Dragging
+    const hueBar = document.getElementById("hueBar");
+    function handleHue(e) {
+      const rect = hueBar.getBoundingClientRect();
+      const h = Math.max(0, Math.min(360, ((e.clientX - rect.left) / rect.width) * 360));
+      state.hsv.h = h;
+      const [r, g, b] = hsvToRgb(h, state.hsv.s, state.hsv.v);
+      const hex = rgbToHex(r, g, b);
+      if (state.bgMode === "solid") state.solid = hex;
+      else state[state.activeStop] = hex;
+      updatePickerUI();
+      render();
+    }
+    let hueDrag = false;
+    hueBar.addEventListener("pointerdown", (e) => { hueDrag = true; hueBar.setPointerCapture(e.pointerId); handleHue(e); });
+    hueBar.addEventListener("pointermove", (e) => { if (hueDrag) handleHue(e); });
+    hueBar.addEventListener("pointerup", () => { hueDrag = false; });
+
+    // Eyedropper (Native EyeDropper API + Canvas Click Fallback)
+    async function activateEyedropper() {
+      if (window.EyeDropper) {
+        try {
+          const ed = new EyeDropper();
+          const res = await ed.open();
+          if (res?.sRGBHex) applyHexToActiveStop(res.sRGBHex);
+          return;
+        } catch {
+          return;
+        }
+      }
+      state.pickingCanvasColor = true;
+      cv.style.cursor = "crosshair";
+      document.getElementById("activeStopLbl").textContent = "Click image to sample colour";
+    }
+
+    // Build Fresh Presets Grid
+    const presetGrid = document.getElementById("presetGrid");
+    PRESETS.forEach(([a, b, c], idx) => {
+      const d = document.createElement("div");
+      d.className = "preset-swatch" + (idx === 2 ? " active" : "");
+      d.style.background = `linear-gradient(135deg, ${a}, ${b})`;
+      d.onclick = () => {
+        document.querySelectorAll(".preset-swatch").forEach(s => s.classList.remove("active"));
+        d.classList.add("active");
+        state.c1 = a; state.c2 = b; state.c3 = c; state.solid = a;
+        selectStop(state.bgMode === "solid" ? "solid" : "c1");
+        render();
+      };
+      presetGrid.appendChild(d);
+    });
+
+    // --- Client-Side Photo Colour Extractor & Smart Auto-Color (Zero Backend!) ---
+    function analyzeScreenshotAndColor(img, applyAutoGradient = true) {
+      const off = document.createElement("canvas");
+      off.width = 48; off.height = 48;
+      const octx = off.getContext("2d");
+      octx.drawImage(img, 0, 0, 48, 48);
+      const data = octx.getImageData(0, 0, 48, 48).data;
+
+      const bins = new Map();
+      let lumTotal = 0;
+      const pxCount = data.length / 4;
+
+      for (let i = 0; i < data.length; i += 4) {
+        const r = data[i], g = data[i + 1], b = data[i + 2];
+        lumTotal += 0.299 * r + 0.587 * g + 0.114 * b;
+        const key = `${r >> 4}-${g >> 4}-${b >> 4}`;
+        const entry = bins.get(key) || { r: 0, g: 0, b: 0, count: 0 };
+        entry.r += r; entry.g += g; entry.b += b; entry.count += 1;
+        bins.set(key, entry);
+      }
+
+      const sorted = Array.from(bins.values())
+        .map((e) => {
+          const r = e.r / e.count, g = e.g / e.count, b = e.b / e.count;
+          const hsv = rgbToHsv(r, g, b);
+          return { r, g, b, count: e.count, hsv };
+        })
+        .sort((a, b) => b.count - a.count);
+
+      // Extract Top 5 distinct Photo Colours for Canva-style "Photo colours"
+      const distinct = [];
+      for (const item of sorted) {
+        const tooClose = distinct.some(
+          (d) => Math.hypot(d.r - item.r, d.g - item.g, d.b - item.b) < 46
+        );
+        if (!tooClose) {
+          distinct.push(item);
+          if (distinct.length === 5) break;
+        }
+      }
+      state.photoColors = distinct.map((d) => rgbToHex(d.r, d.g, d.b));
+
+      // Render Photo Colour Dots
+      const sec = document.getElementById("photoSection");
+      const wrap = document.getElementById("photoDots");
+      wrap.innerHTML = "";
+      if (state.photoColors.length > 0) {
+        sec.style.display = "block";
+        state.photoColors.forEach((hex) => {
+          const btn = document.createElement("button");
+          btn.className = "photo-dot";
+          btn.style.background = hex;
+          btn.title = hex.toUpperCase();
+          btn.onclick = () => applyHexToActiveStop(hex);
+          wrap.appendChild(btn);
+        });
+      }
+
+      // Smart Auto-Gradient Selection based on Dark/Light UI + Brand Accent
+      if (applyAutoGradient) {
+        const avgLum = lumTotal / pxCount;
+        const isDarkUI = avgLum < 115;
+
+        // Find dominant vibrant accent in screenshot
+        const accents = sorted
+          .filter((c) => c.hsv.s > 0.28 && c.hsv.v > 0.25)
+          .sort((a, b) => (b.hsv.s * Math.sqrt(b.count)) - (a.hsv.s * Math.sqrt(a.count)));
+
+        if (accents.length > 0) {
+          const hue = accents[0].hsv.h;
+          if (isDarkUI) {
+            state.c1 = hslToHex(hue, 84, 56);
+            state.c2 = hslToHex((hue + 22) % 360, 82, 38);
+            state.c3 = hslToHex((hue + 340) % 360, 90, 68);
+          } else {
+            state.c1 = hslToHex(hue, 78, 58);
+            state.c2 = hslToHex((hue + 24) % 360, 76, 42);
+            state.c3 = hslToHex((hue + 340) % 360, 85, 72);
+          }
+        } else {
+          // Neutral UI screenshot -> pick high-contrast fresh studio palette
+          const [a, b, c] = isDarkUI ? PRESETS[2] : PRESETS[9];
+          state.c1 = a; state.c2 = b; state.c3 = c;
+        }
+        state.solid = state.c1;
+        selectStop(state.bgMode === "solid" ? "solid" : "c1");
+      }
+    }
+
+    function smartAutoColor() {
+      if (!state.img) return;
+      analyzeScreenshotAndColor(state.img, true);
+      render();
+    }
+
+    // --- UI Controls ---
+    function openTab(tab, btn) {
+      document.querySelectorAll(".rail-btn").forEach(b => b.classList.remove("active"));
+      btn.classList.add("active");
+      document.querySelectorAll(".tab-pane").forEach(p => p.classList.remove("active"));
+      document.getElementById("tab-" + tab).classList.add("active");
+    }
+
+    function setBgMode(mode, btn) {
+      state.bgMode = mode;
+      document.querySelectorAll("[data-bgmode]").forEach(b => b.classList.remove("active"));
+      btn.classList.add("active");
+      document.getElementById("dot-c2").style.display = mode === "solid" ? "none" : "block";
+      document.getElementById("dot-c3").style.display = mode === "mesh" ? "block" : "none";
+      document.getElementById("angleWrap").style.display = mode === "solid" ? "none" : "flex";
+      selectStop(mode === "solid" ? "solid" : "c1");
+      render();
+    }
+
+    function swapColors() {
+      [state.c1, state.c2] = [state.c2, state.c1];
+      selectStop(state.activeStop);
+      render();
+    }
+
+    function randomPalette() {
+      const [a, b, c] = PRESETS[Math.floor(Math.random() * PRESETS.length)];
+      state.c1 = a; state.c2 = b; state.c3 = c; state.solid = a;
+      selectStop(state.bgMode === "solid" ? "solid" : "c1");
+      render();
+    }
+
+    function setTex(t, btn) {
+      state.texture = t;
+      document.querySelectorAll("[data-tex]").forEach(b => b.classList.remove("active"));
+      btn.classList.add("active");
+      render();
+    }
+
+    function setLayout(mode, btn) {
+      state.layout = mode;
+      document.querySelectorAll("[data-layout]").forEach(b => b.classList.remove("active"));
+      btn.classList.add("active");
+      render();
+    }
+
+    function setBorder(mode, btn) {
+      state.borderMode = mode;
+      document.querySelectorAll("[data-border]").forEach(b => b.classList.remove("active"));
+      btn.classList.add("active");
+      render();
+    }
+
+    function setBadgePos(pos, btn) {
+      state.badgePos = pos;
+      document.querySelectorAll("[data-bpos]").forEach(b => b.classList.remove("active"));
+      btn.classList.add("active");
+      render();
+    }
+
+    function setRatio(val) {
+      const [w, h] = val.split("x").map(Number);
+      state.width = w; state.height = h;
+      cv.width = w; cv.height = h;
+      render();
+    }
+
+    function stepZoom(delta) {
+      state.zoom = Math.max(0.85, Math.min(2.4, +(state.zoom + delta).toFixed(2)));
+      document.getElementById("zoomIn").value = state.zoom;
+      render();
+    }
+    function resetPan() { state.panX = 0; state.panY = 0; render(); }
+    function alignTopLeft() { state.panX = 99999; state.panY = 99999; render(); }
+
+    function rr(x, y, w, h, r) {
+      ctx.beginPath();
+      ctx.moveTo(x + r, y);
+      ctx.arcTo(x + w, y, x + w, y + h, r);
+      ctx.arcTo(x + w, y + h, x, y + h, r);
+      ctx.arcTo(x, y + h, x, y, r);
+      ctx.arcTo(x, y, x + w, y, r);
+      ctx.closePath();
+    }
+
+    function drawBackground(W, H) {
+      if (state.bgMode === "solid") {
+        ctx.fillStyle = state.solid;
+        ctx.fillRect(0, 0, W, H);
+      } else {
+        const rad = (state.angle * Math.PI) / 180;
+        const dx = Math.cos(rad) * W * 0.55;
+        const dy = Math.sin(rad) * H * 0.55;
+        const bg = ctx.createLinearGradient(W / 2 - dx, H / 2 - dy, W / 2 + dx, H / 2 + dy);
+        bg.addColorStop(0, state.c1);
+        bg.addColorStop(1, state.c2);
+        ctx.fillStyle = bg;
+        ctx.fillRect(0, 0, W, H);
+
+        if (state.bgMode === "mesh") {
+          const m1 = ctx.createRadialGradient(W * 0.14, H * 0.14, 20, W * 0.14, H * 0.14, W * 0.65);
+          m1.addColorStop(0, state.c3);
+          m1.addColorStop(1, "rgba(0,0,0,0)");
+          ctx.fillStyle = m1;
+          ctx.fillRect(0, 0, W, H);
+
+          const m2 = ctx.createRadialGradient(W * 0.88, H * 0.86, 20, W * 0.88, H * 0.86, W * 0.55);
+          m2.addColorStop(0, state.c1);
+          m2.addColorStop(1, "rgba(0,0,0,0)");
+          ctx.fillStyle = m2;
+          ctx.fillRect(0, 0, W, H);
+        }
+      }
+
+      if (state.texture === "glow") {
+        const g = ctx.createRadialGradient(W * 0.22, H * 0.15, 20, W * 0.22, H * 0.15, W * 0.55);
+        g.addColorStop(0, "rgba(255,255,255,0.22)");
+        g.addColorStop(1, "rgba(255,255,255,0)");
+        ctx.fillStyle = g;
+        ctx.fillRect(0, 0, W, H);
+      } else if (state.texture === "dots") {
+        ctx.fillStyle = "rgba(255,255,255,0.18)";
+        for (let x = 28; x < W; x += 36) {
+          for (let y = 28; y < H; y += 36) {
+            ctx.beginPath();
+            ctx.arc(x, y, 1.8, 0, Math.PI * 2);
+            ctx.fill();
+          }
+        }
+      } else if (state.texture === "grid") {
+        ctx.strokeStyle = "rgba(255,255,255,0.10)";
+        ctx.lineWidth = 1;
+        for (let x = 0; x < W; x += 48) { ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, H); ctx.stroke(); }
+        for (let y = 0; y < H; y += 48) { ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(W, y); ctx.stroke(); }
+      }
+    }
+
+    function render() {
+      document.getElementById("angleVal").textContent = state.angle + "°";
+      document.getElementById("zoomVal").textContent = state.zoom.toFixed(2) + "x";
+      document.getElementById("padVal").textContent = state.pad + "px";
+      document.getElementById("radVal").textContent = state.radius + "px";
+      document.getElementById("shVal").textContent = state.shadow + "px";
+
+      const W = state.width, H = state.height;
+      ctx.clearRect(0, 0, W, H);
+      drawBackground(W, H);
+
+      let fx, fy, fw, fh, visW, visH;
+      const pad = state.pad;
+      if (state.layout === "offset") {
+        fx = Math.round(pad * 1.15);
+        fy = Math.round(pad * 0.85);
+        fw = W - fx + 50;
+        fh = H - fy + 50;
+        visW = W - fx;
+        visH = H - fy;
+      } else {
+        fx = pad;
+        fy = Math.round(pad * 0.72);
+        fw = W - pad * 2;
+        fh = H - fy * 2;
+        visW = fw;
+        visH = fh;
+      }
+
+      ctx.save();
+      ctx.shadowColor = `rgba(15, 23, 42, ${state.shadow > 0 ? 0.36 : 0})`;
+      ctx.shadowBlur = state.shadow;
+      ctx.shadowOffsetX = state.layout === "offset" ? -10 : 0;
+      ctx.shadowOffsetY = Math.round(state.shadow * 0.42);
+      rr(fx, fy, fw, fh, state.radius);
+      ctx.fillStyle = "#0f172a";
+      ctx.fill();
+      ctx.restore();
+
+      ctx.save();
+      rr(fx, fy, fw, fh, state.radius);
+      ctx.clip();
+
+      let contentY = fy, contentH = visH;
+      if (state.layout === "browser" || state.layout === "macos") {
+        const barH = 52;
+        ctx.fillStyle = state.layout === "macos" ? "#181b24" : "#12151d";
+        ctx.fillRect(fx, fy, fw, barH);
+        ctx.fillStyle = "rgba(255,255,255,0.08)";
+        ctx.fillRect(fx, fy + barH - 1, fw, 1);
+
+        ["#ef4444", "#f59e0b", "#10b981"].forEach((col, i) => {
+          ctx.fillStyle = col;
+          ctx.beginPath();
+          ctx.arc(fx + 28 + i * 22, fy + barH / 2, 6.5, 0, Math.PI * 2);
+          ctx.fill();
+        });
+
+        ctx.fillStyle = "#e2e8f0";
+        ctx.font = "600 18px -apple-system, Inter, sans-serif";
+        ctx.textAlign = "left";
+        ctx.fillText(state.winTitle || "", fx + 104, fy + 32);
+
+        if (state.winUrl) {
+          ctx.fillStyle = "#94a3b8";
+          ctx.font = "500 15px ui-monospace, Menlo, monospace";
+          ctx.textAlign = "right";
+          ctx.fillText(state.winUrl, fx + visW - 24, fy + 32);
+        }
+        contentY += barH;
+        contentH -= barH;
+      }
+
+      if (state.img) {
+        const iw = state.img.width, ih = state.img.height;
+        const scale = Math.max(visW / iw, contentH / ih) * state.zoom;
+        const dw = iw * scale, dh = ih * scale;
+        const maxPanX = Math.max(0, (dw - visW) / 2);
+        const maxPanY = Math.max(0, (dh - contentH) / 2);
+        state.panX = Math.max(-maxPanX, Math.min(maxPanX, state.panX));
+        state.panY = Math.max(-maxPanY, Math.min(maxPanY, state.panY));
+        ctx.drawImage(state.img, fx + (visW - dw) / 2 + state.panX, contentY + (contentH - dh) / 2 + state.panY, dw, dh);
+      } else {
+        ctx.fillStyle = "#0f172a";
+        ctx.fillRect(fx, contentY, fw, contentH + 60);
+        ctx.fillStyle = "#f8fafc";
+        ctx.font = "700 32px -apple-system, Inter, sans-serif";
+        ctx.textAlign = "center";
+        ctx.fillText("Paste (Ctrl + V) or Drop Screenshot", fx + visW / 2, contentY + contentH / 2 - 10);
+        ctx.fillStyle = "#94a3b8";
+        ctx.font = "500 18px -apple-system, Inter, sans-serif";
+        ctx.fillText("Smart Auto-Color extracts your UI palette automatically", fx + visW / 2, contentY + contentH / 2 + 26);
+      }
+      ctx.restore();
+
+      if (state.borderMode !== "none") {
+        rr(fx, fy, fw, fh, state.radius);
+        const bCols = { glass: "rgba(255,255,255,0.28)", light: "rgba(255,255,255,0.9)", dark: "rgba(15,23,42,0.8)" };
+        ctx.strokeStyle = bCols[state.borderMode];
+        ctx.lineWidth = 2.5;
+        ctx.stroke();
+      }
+
+      if (state.badgeText && state.badgeText.trim()) {
+        const txt = state.badgeText.trim();
+        ctx.font = "600 18px -apple-system, Inter, sans-serif";
+        const tw = ctx.measureText(txt).width + 36, th = 38;
+        let bx = 36, by = 36;
+        if (state.badgePos === "bl") { bx = 36; by = H - th - 32; }
+        if (state.badgePos === "br") { bx = W - tw - 36; by = H - th - 32; }
+
+        ctx.save();
+        rr(bx, by, tw, th, 19);
+        ctx.fillStyle = "rgba(15, 23, 42, 0.78)";
+        ctx.fill();
+        ctx.strokeStyle = "rgba(255,255,255,0.2)";
+        ctx.lineWidth = 1.5;
+        ctx.stroke();
+        ctx.fillStyle = "#f8fafc";
+        ctx.textAlign = "center";
+        ctx.fillText(txt, bx + tw / 2, by + 25);
+        ctx.restore();
+      }
+    }
+
+    function loadImageFile(file) {
+      const reader = new FileReader();
+      reader.onload = (ev) => {
+        const im = new Image();
+        im.onload = () => {
+          state.img = im;
+          state.panX = 0;
+          state.panY = 99999;
+          analyzeScreenshotAndColor(im, true); // Auto-match colors on upload!
+          render();
+        };
+        im.src = ev.target.result;
+      };
+      reader.readAsDataURL(file);
+    }
+
+    // Canvas Panning & Fallback Pixel Sampling
+    let dragging = false, lastX = 0, lastY = 0;
+    cv.addEventListener("pointerdown", (e) => {
+      if (state.pickingCanvasColor) {
+        const rect = cv.getBoundingClientRect();
+        const cx = Math.floor(((e.clientX - rect.left) / rect.width) * cv.width);
+        const cy = Math.floor(((e.clientY - rect.top) / rect.height) * cv.height);
+        const px = ctx.getImageData(cx, cy, 1, 1).data;
+        state.pickingCanvasColor = false;
+        cv.style.cursor = "grab";
+        selectStop(state.activeStop);
+        applyHexToActiveStop(rgbToHex(px[0], px[1], px[2]));
+        return;
+      }
+      if (!state.img) { document.getElementById("fileIn").click(); return; }
+      dragging = true; lastX = e.clientX; lastY = e.clientY;
+      cv.setPointerCapture(e.pointerId);
+    });
+    cv.addEventListener("pointermove", (e) => {
+      if (!dragging) return;
+      const rect = cv.getBoundingClientRect();
+      state.panX += (e.clientX - lastX) * (cv.width / rect.width);
+      state.panY += (e.clientY - lastY) * (cv.height / rect.height);
+      lastX = e.clientX; lastY = e.clientY;
+      render();
+    });
+    cv.addEventListener("pointerup", () => { dragging = false; });
+
+    document.getElementById("fileIn").onchange = (e) => {
+      if (e.target.files[0]) loadImageFile(e.target.files[0]);
+      e.target.value = "";
+    };
+    const dropZone = document.getElementById("dropZone");
+    dropZone.addEventListener("dragover", (e) => e.preventDefault());
+    dropZone.addEventListener("drop", (e) => {
+      e.preventDefault();
+      const f = e.dataTransfer.files[0];
+      if (f && f.type.startsWith("image/")) loadImageFile(f);
+    });
+    window.addEventListener("paste", (e) => {
+      const items = e.clipboardData?.items || [];
+      for (const item of items) {
+        if (item.type.startsWith("image/")) {
+          const f = item.getAsFile();
+          if (f) loadImageFile(f);
+          break;
+        }
+      }
+    });
+
+    function downloadPng() {
+      const a = document.createElement("a");
+      a.download = "snapframe-thumbnail.png";
+      a.href = cv.toDataURL("image/png");
+      a.click();
+    }
+
+    async function copyPng() {
+      const btn = document.getElementById("copyBtn");
+      cv.toBlob(async (blob) => {
+        try {
+          await navigator.clipboard.write([new ClipboardItem({ "image/png": blob })]);
+          btn.textContent = "Copied!";
+          setTimeout(() => (btn.textContent = "Copy PNG"), 1500);
+        } catch {
+          btn.textContent = "Use Download";
+          setTimeout(() => (btn.textContent = "Copy PNG"), 1500);
+        }
+      });
+    }
+
+    selectStop("c1");
+    render();
+  </script>
+</body>
+</html>
