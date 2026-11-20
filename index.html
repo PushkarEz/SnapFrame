@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>SnapFrame — Clean Portfolio Card Studio</title>
+  <title>SnapFrame — Portfolio Card Design Studio</title>
   <script>
     (function () {
       try {
@@ -52,20 +52,13 @@
       display: flex;
       flex-direction: column;
     }
-    @media (max-width: 920px) {
-      body { height: auto; overflow: auto; }
-    }
+    @media (max-width: 920px) { body { height: auto; overflow: auto; } }
 
-    /* Circular Wave Theme Transition */
     ::view-transition-old(root),
-    ::view-transition-new(root) {
-      animation: none;
-      mix-blend-mode: normal;
-    }
+    ::view-transition-new(root) { animation: none; mix-blend-mode: normal; }
     ::view-transition-old(root) { z-index: 1; }
     ::view-transition-new(root) { z-index: 9999; }
 
-    /* Minimal Top Header */
     header {
       height: 54px;
       flex-shrink: 0;
@@ -77,355 +70,189 @@
       background: var(--surface);
       border-bottom: 1px solid var(--border);
     }
-    .brand {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
+    .brand { display: flex; align-items: center; gap: 10px; }
     .brand-icon {
-      width: 28px;
-      height: 28px;
-      border-radius: 8px;
-      background: var(--btn-bg);
-      color: var(--btn-fg);
-      display: grid;
-      place-items: center;
-      font-weight: 800;
-      font-size: 12px;
+      width: 28px; height: 28px; border-radius: 8px;
+      background: var(--btn-bg); color: var(--btn-fg);
+      display: grid; place-items: center; font-weight: 800; font-size: 12px;
     }
     .brand-name { font-size: 14px; font-weight: 700; letter-spacing: -0.02em; }
     .brand-sub { font-size: 11px; color: var(--muted); }
     @media (max-width: 600px) { .brand-sub { display: none; } }
 
-    .hdr-right {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
+    .hdr-right { display: flex; align-items: center; gap: 8px; }
     .clock-pill {
       font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
-      font-size: 11.5px;
-      color: var(--muted);
-      background: var(--soft);
-      border: 1px solid var(--border);
-      padding: 5px 10px;
-      border-radius: 8px;
-      white-space: nowrap;
+      font-size: 11.5px; color: var(--muted); background: var(--soft);
+      border: 1px solid var(--border); padding: 5px 10px; border-radius: 8px; white-space: nowrap;
     }
     @media (max-width: 560px) { .clock-pill { display: none; } }
 
     .icon-btn, .pill-btn {
-      border: 1px solid var(--border);
-      background: var(--surface);
-      color: var(--text);
-      border-radius: 8px;
-      padding: 6px 11px;
-      font-size: 12px;
-      font-weight: 600;
-      cursor: pointer;
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      text-decoration: none;
-      transition: all 0.15s ease;
+      border: 1px solid var(--border); background: var(--surface); color: var(--text);
+      border-radius: 8px; padding: 6px 11px; font-size: 12px; font-weight: 600;
+      cursor: pointer; display: inline-flex; align-items: center; gap: 6px;
+      text-decoration: none; transition: all 0.15s ease;
     }
     .icon-btn:hover, .pill-btn:hover { background: var(--soft); }
     .icon-btn { padding: 6px 8px; }
 
-    /* Clean 2-Column Studio (Like MiniFolio + Ref 1) */
-    .workspace {
-      flex: 1;
-      min-height: 0;
-      display: grid;
-      grid-template-columns: 310px 1fr;
-    }
-    @media (max-width: 920px) {
-      .workspace { grid-template-columns: 1fr; }
-    }
+    .workspace { flex: 1; min-height: 0; display: grid; grid-template-columns: 325px 1fr; }
+    @media (max-width: 920px) { .workspace { grid-template-columns: 1fr; } }
 
     aside {
       background: var(--sidebar);
       border-right: 1px solid var(--border);
-      padding: 18px 16px;
+      padding: 16px;
       overflow-y: auto;
       display: flex;
       flex-direction: column;
-      gap: 18px;
+      gap: 16px;
     }
     @media (max-width: 920px) {
       aside { border-right: none; border-top: 1px solid var(--border); order: 2; }
     }
 
     .sec-lbl {
-      font-size: 12px;
-      font-weight: 600;
-      color: var(--text);
-      margin-bottom: 8px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
+      font-size: 12px; font-weight: 600; color: var(--text);
+      margin-bottom: 8px; display: flex; align-items: center; justify-content: space-between;
     }
-    .sec-lbl small {
-      font-size: 11px;
-      font-weight: 500;
+    .sec-lbl small { font-size: 11px; font-weight: 500; color: var(--muted); }
+
+    /* 5 Visual Design Cards Grid */
+    .design-grid {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 6px;
+    }
+    .design-btn {
+      border: 1px solid var(--border);
+      background: var(--surface);
       color: var(--muted);
+      border-radius: 9px;
+      padding: 7px 2px;
+      font-size: 10px;
+      font-weight: 600;
+      cursor: pointer;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+      transition: all 0.15s ease;
+    }
+    .design-btn:hover { border-color: var(--muted); color: var(--text); }
+    .design-btn.active {
+      border-color: var(--ring);
+      background: rgba(124, 58, 237, 0.08);
+      color: var(--text);
+      box-shadow: 0 0 0 1px var(--ring);
     }
 
     .seg {
-      display: grid;
-      grid-auto-flow: column;
-      grid-auto-columns: 1fr;
-      gap: 3px;
-      background: var(--soft);
-      border: 1px solid var(--border);
-      padding: 3px;
-      border-radius: 9px;
+      display: grid; grid-auto-flow: column; grid-auto-columns: 1fr; gap: 3px;
+      background: var(--soft); border: 1px solid var(--border); padding: 3px; border-radius: 9px;
     }
     .seg button {
-      border: none;
-      background: transparent;
-      color: var(--muted);
-      font-size: 11.5px;
-      font-weight: 600;
-      padding: 6px 6px;
-      border-radius: 6px;
-      cursor: pointer;
-      transition: all 0.15s ease;
+      border: none; background: transparent; color: var(--muted);
+      font-size: 11.5px; font-weight: 600; padding: 6px; border-radius: 6px; cursor: pointer;
     }
     .seg button.active {
-      background: var(--surface);
-      color: var(--text);
+      background: var(--surface); color: var(--text);
       box-shadow: 0 1px 3px rgba(15, 23, 42, 0.08);
     }
 
-    /* Clean Swatch Tray (Ref 1 + Canva) */
     .tray {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: 12px;
-      padding: 10px;
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: 12px; padding: 10px; display: flex; flex-direction: column; gap: 10px;
     }
-    .dots-grid {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 8px;
-      align-items: center;
-    }
+    .dots-grid { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
     .dot {
-      width: 28px;
-      height: 28px;
-      border-radius: 50%;
-      border: 2px solid var(--surface);
-      box-shadow: 0 0 0 1px var(--border);
-      cursor: pointer;
-      transition: transform 0.12s ease;
-      padding: 0;
+      width: 27px; height: 27px; border-radius: 50%; border: 2px solid var(--surface);
+      box-shadow: 0 0 0 1px var(--border); cursor: pointer; transition: transform 0.12s ease; padding: 0;
     }
     .dot:hover { transform: scale(1.1); }
     .dot.active { box-shadow: 0 0 0 2px var(--surface), 0 0 0 3.5px var(--ring); }
 
     .rainbow-dot {
-      width: 28px;
-      height: 28px;
-      border-radius: 50%;
-      border: none;
-      padding: 2px;
-      cursor: pointer;
+      width: 27px; height: 27px; border-radius: 50%; border: none; padding: 2px; cursor: pointer;
       background: conic-gradient(#ef4444, #f59e0b, #10b981, #06b6d4, #3b82f6, #8b5cf6, #ec4899, #ef4444);
-      transition: transform 0.12s ease;
     }
-    .rainbow-dot:hover { transform: scale(1.1); }
     .rainbow-dot span {
-      width: 100%;
-      height: 100%;
-      border-radius: 50%;
-      background: var(--surface);
-      color: var(--text);
-      display: grid;
-      place-items: center;
-      font-size: 14px;
-      font-weight: 600;
-      line-height: 1;
+      width: 100%; height: 100%; border-radius: 50%; background: var(--surface); color: var(--text);
+      display: grid; place-items: center; font-size: 14px; font-weight: 600; line-height: 1;
     }
 
-    /* Canva Popover HSV Picker */
     .picker-card {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: 14px;
-      padding: 11px;
-      box-shadow: 0 10px 28px rgba(15, 23, 42, 0.08);
-      display: none;
-      flex-direction: column;
-      gap: 10px;
+      background: var(--surface); border: 1px solid var(--border); border-radius: 14px;
+      padding: 11px; box-shadow: 0 10px 28px rgba(15, 23, 42, 0.08);
+      display: none; flex-direction: column; gap: 10px; margin-top: 10px;
     }
     .picker-card.open { display: flex; }
-    .sv-box {
-      position: relative;
-      width: 100%;
-      height: 130px;
-      border-radius: 9px;
-      cursor: crosshair;
-      overflow: hidden;
-      touch-action: none;
-    }
+    .sv-box { position: relative; width: 100%; height: 125px; border-radius: 9px; cursor: crosshair; overflow: hidden; touch-action: none; }
     .sv-handle {
-      position: absolute;
-      width: 15px;
-      height: 15px;
-      border-radius: 50%;
-      border: 2.5px solid #fff;
-      box-shadow: 0 0 0 1.5px rgba(0,0,0,0.4);
-      transform: translate(-50%, -50%);
-      pointer-events: none;
+      position: absolute; width: 15px; height: 15px; border-radius: 50%;
+      border: 2.5px solid #fff; box-shadow: 0 0 0 1.5px rgba(0,0,0,0.4);
+      transform: translate(-50%, -50%); pointer-events: none;
     }
     .hue-bar {
-      position: relative;
-      width: 100%;
-      height: 12px;
-      border-radius: 999px;
+      position: relative; width: 100%; height: 12px; border-radius: 999px;
       background: linear-gradient(to right, #ff0000, #ffff00, #00ff00, #00ffff, #0000ff, #ff00ff, #ff0000);
-      cursor: pointer;
-      touch-action: none;
+      cursor: pointer; touch-action: none;
     }
     .hue-handle {
-      position: absolute;
-      top: 50%;
-      width: 16px;
-      height: 16px;
-      border-radius: 50%;
-      border: 2.5px solid #fff;
-      box-shadow: 0 1px 4px rgba(0,0,0,0.4);
-      transform: translate(-50%, -50%);
-      pointer-events: none;
+      position: absolute; top: 50%; width: 16px; height: 16px; border-radius: 50%;
+      border: 2.5px solid #fff; box-shadow: 0 1px 4px rgba(0,0,0,0.4);
+      transform: translate(-50%, -50%); pointer-events: none;
     }
-    .hex-row {
-      display: flex;
-      align-items: center;
-      gap: 6px;
-    }
+    .hex-row { display: flex; align-items: center; gap: 6px; }
     .hex-pill {
-      flex: 1;
-      display: flex;
-      align-items: center;
-      gap: 7px;
-      border: 1px solid var(--border);
-      border-radius: 8px;
-      padding: 5px 9px;
-      background: var(--soft);
+      flex: 1; display: flex; align-items: center; gap: 7px;
+      border: 1px solid var(--border); border-radius: 8px; padding: 5px 9px; background: var(--soft);
     }
-    .hex-dot {
-      width: 16px;
-      height: 16px;
-      border-radius: 50%;
-      border: 1px solid rgba(0,0,0,0.12);
-      flex-shrink: 0;
-    }
+    .hex-dot { width: 16px; height: 16px; border-radius: 50%; border: 1px solid rgba(0,0,0,0.12); flex-shrink: 0; }
     .hex-pill input {
-      width: 100%;
-      border: none;
-      background: transparent;
-      color: var(--text);
-      font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
-      font-size: 12px;
-      font-weight: 600;
-      outline: none;
-      text-transform: uppercase;
+      width: 100%; border: none; background: transparent; color: var(--text);
+      font-family: ui-monospace, Menlo, monospace; font-size: 12px; font-weight: 600; outline: none; text-transform: uppercase;
     }
 
     input[type="text"], select.ctrl-sel {
-      width: 100%;
-      background: var(--surface);
-      border: 1px solid var(--border);
-      color: var(--text);
-      padding: 8px 10px;
-      border-radius: 8px;
-      font-size: 12.5px;
-      outline: none;
+      width: 100%; background: var(--surface); border: 1px solid var(--border);
+      color: var(--text); padding: 8px 10px; border-radius: 8px; font-size: 12.5px; outline: none;
     }
     input[type="text"]:focus, select.ctrl-sel:focus { border-color: var(--muted); }
 
     .slider-row { display: flex; flex-direction: column; gap: 4px; }
-    .slider-top {
-      display: flex;
-      justify-content: space-between;
-      font-size: 11.5px;
-      color: var(--muted);
-    }
+    .slider-top { display: flex; justify-content: space-between; font-size: 11.5px; color: var(--muted); }
     input[type="range"] { width: 100%; accent-color: var(--text); cursor: pointer; }
 
-    /* Center Stage (Like Ref 1 + MiniFolio) */
     main {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      padding: 24px 20px;
-      gap: 16px;
-      overflow-y: auto;
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      padding: 24px 20px; gap: 16px; overflow-y: auto;
       background-color: var(--bg);
       background-image: radial-gradient(var(--dot) 1px, transparent 1px);
       background-size: 22px 22px;
     }
     @media (max-width: 920px) { main { padding: 16px 12px; order: 1; } }
 
-    .stage-box {
-      width: 100%;
-      max-width: 780px;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 16px;
-    }
+    .stage-box { width: 100%; max-width: 780px; display: flex; flex-direction: column; align-items: center; gap: 16px; }
     canvas {
-      width: 100%;
-      max-height: calc(100vh - 195px);
-      object-fit: contain;
-      height: auto;
-      border-radius: 14px;
-      box-shadow: 0 20px 50px rgba(15, 23, 42, 0.14);
-      cursor: grab;
-      touch-action: none;
+      width: 100%; max-height: calc(100vh - 195px); object-fit: contain; height: auto;
+      border-radius: 14px; box-shadow: 0 20px 50px rgba(15, 23, 42, 0.14);
+      cursor: grab; touch-action: none;
     }
     canvas:active { cursor: grabbing; }
 
-    /* Clean Centered Action Buttons Below Preview (Exact Ref 1 Feel) */
-    .action-bar {
-      display: flex;
-      flex-wrap: wrap;
-      align-items: center;
-      justify-content: center;
-      gap: 8px;
-    }
+    .action-bar { display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 8px; }
     .btn-outline {
-      border: 1px solid var(--border);
-      background: var(--surface);
-      color: var(--text);
-      padding: 8px 14px;
-      border-radius: 9px;
-      font-size: 12.5px;
-      font-weight: 600;
-      cursor: pointer;
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
+      border: 1px solid var(--border); background: var(--surface); color: var(--text);
+      padding: 8px 14px; border-radius: 9px; font-size: 12.5px; font-weight: 600;
+      cursor: pointer; display: inline-flex; align-items: center; gap: 6px;
     }
     .btn-outline:hover { background: var(--soft); }
     .btn-solid {
-      border: 1px solid var(--btn-bg);
-      background: var(--btn-bg);
-      color: var(--btn-fg);
-      padding: 8px 18px;
-      border-radius: 9px;
-      font-size: 12.5px;
-      font-weight: 600;
-      cursor: pointer;
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
+      border: 1px solid var(--btn-bg); background: var(--btn-bg); color: var(--btn-fg);
+      padding: 8px 18px; border-radius: 9px; font-size: 12.5px; font-weight: 600;
+      cursor: pointer; display: inline-flex; align-items: center; gap: 6px;
     }
     .btn-solid:hover { opacity: 0.9; }
     input[type="file"] { display: none; }
@@ -437,7 +264,7 @@
       <div class="brand-icon">SF</div>
       <div>
         <div class="brand-name">SnapFrame</div>
-        <div class="brand-sub">Clean Portfolio Thumbnail Studio</div>
+        <div class="brand-sub">5 Portfolio Card Designs · Studio</div>
       </div>
     </div>
 
@@ -446,16 +273,50 @@
       <a class="pill-btn" href="https://pushkarez.vercel.app/" target="_blank" rel="noopener noreferrer">
         Pushkar Shinde ↗
       </a>
-      <button class="icon-btn" id="themeBtn" onclick="toggleTheme(event)" title="Toggle White / Dark Theme" aria-label="Toggle theme">
+      <button class="icon-btn" onclick="toggleTheme(event)" title="Toggle Theme">
         <svg id="themeIcon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/></svg>
       </button>
     </div>
   </header>
 
   <div class="workspace">
-    <!-- Clean Minimal Left Sidebar -->
     <aside>
-      <!-- 1. Colors & Auto-Match -->
+      <!-- 5 DIFFERENT DESIGN ARCHITECTURES -->
+      <div>
+        <div class="sec-lbl"><span>Choose Design Style</span><small>5 Layouts</small></div>
+        <div class="design-grid">
+          <button class="design-btn active" data-design="offset" onclick="setDesign('offset', this)">
+            <svg width="22" height="16" viewBox="0 0 22 16" fill="none"><rect x="1" y="1" width="20" height="14" rx="2.5" stroke="currentColor" stroke-width="1.3"/><rect x="5" y="4" width="16" height="11" rx="1.5" fill="currentColor" fill-opacity="0.3"/></svg>
+            Offset
+          </button>
+          <button class="design-btn" data-design="tilt" onclick="setDesign('tilt', this)">
+            <svg width="22" height="16" viewBox="0 0 22 16" fill="none"><rect x="1" y="1" width="20" height="14" rx="2.5" stroke="currentColor" stroke-width="1.3"/><rect x="4" y="3.5" width="14" height="9" rx="1.5" transform="rotate(-5 11 8)" fill="currentColor" fill-opacity="0.3"/></svg>
+            3D Tilt
+          </button>
+          <button class="design-btn" data-design="split" onclick="setDesign('split', this)">
+            <svg width="22" height="16" viewBox="0 0 22 16" fill="none"><rect x="1" y="1" width="20" height="14" rx="2.5" stroke="currentColor" stroke-width="1.3"/><path d="M3 5h5M3 8h6M3 11h4" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/><rect x="11" y="3" width="10" height="12" rx="1.5" fill="currentColor" fill-opacity="0.3"/></svg>
+            Split
+          </button>
+          <button class="design-btn" data-design="duo" onclick="setDesign('duo', this)">
+            <svg width="22" height="16" viewBox="0 0 22 16" fill="none"><rect x="2" y="2" width="15" height="11" rx="1.5" stroke="currentColor" stroke-width="1.3"/><rect x="15" y="5" width="5.5" height="9.5" rx="1.2" fill="currentColor" fill-opacity="0.35" stroke="currentColor" stroke-width="1.1"/></svg>
+            Duo
+          </button>
+          <button class="design-btn" data-design="stack" onclick="setDesign('stack', this)">
+            <svg width="22" height="16" viewBox="0 0 22 16" fill="none"><rect x="5" y="2" width="12" height="9" rx="1.5" stroke="currentColor" stroke-opacity="0.45"/><rect x="3.5" y="4" width="15" height="10" rx="1.5" fill="currentColor" fill-opacity="0.28" stroke="currentColor" stroke-width="1.2"/></svg>
+            Stack
+          </button>
+        </div>
+      </div>
+
+      <!-- Split Design Text Inputs (shown in Split mode) -->
+      <div id="splitInputs" style="display:none;flex-direction:column;gap:8px;">
+        <div class="sec-lbl" style="margin-bottom:2px;"><span>Split Editorial Text</span></div>
+        <input type="text" value="RepPYQ" placeholder="Project Title (e.g. RepPYQ)" oninput="state.splitTitle=this.value; render();" />
+        <input type="text" value="Spot repeated SPPU PYQs and export unit-wise PDFs." placeholder="Short 1-line description" oninput="state.splitSub=this.value; render();" />
+        <input type="text" value="SPPU 2019 · Live" placeholder="Small Tag Pill" oninput="state.splitTag=this.value; render();" />
+      </div>
+
+      <!-- Colors & Auto-Match -->
       <div>
         <div class="sec-lbl">
           <span>Backdrop Colours</span>
@@ -463,28 +324,24 @@
             ✦ Auto-Match
           </button>
         </div>
-
         <div class="tray">
           <div class="dots-grid" id="paletteDots"></div>
-
-          <!-- Active Stops + Rainbow Picker Trigger -->
           <div style="display:flex;align-items:center;gap:8px;padding-top:4px;border-top:1px solid var(--border);">
             <button class="rainbow-dot" title="Custom Colour Picker" onclick="togglePicker()"><span>+</span></button>
             <button class="dot" id="stop1" title="Color 1" onclick="selectStop('c1')"></button>
             <button class="dot" id="stop2" title="Color 2" onclick="selectStop('c2')"></button>
             <button class="dot" id="stop3" title="Highlight Glow" onclick="selectStop('c3')"></button>
-            <button class="icon-btn" style="margin-left:auto;padding:4px 8px;font-size:11px;" onclick="swapColors()" title="Swap Gradient Colors">⇄</button>
+            <button class="icon-btn" style="margin-left:auto;padding:4px 8px;font-size:11px;" onclick="swapColors()">⇄</button>
           </div>
         </div>
 
-        <!-- Canva HSV Color Picker Popover -->
-        <div class="picker-card" id="pickerCard" style="margin-top:10px;">
+        <div class="picker-card" id="pickerCard">
           <div class="sv-box" id="svBox"><div class="sv-handle" id="svHandle"></div></div>
           <div class="hue-bar" id="hueBar"><div class="hue-handle" id="hueHandle"></div></div>
           <div class="hex-row">
             <div class="hex-pill">
               <div class="hex-dot" id="hexDot"></div>
-              <input type="text" id="hexIn" value="#A3E635" maxlength="7" oninput="onHexTyped(this.value)" />
+              <input type="text" id="hexIn" value="#3B82F6" maxlength="7" oninput="onHexTyped(this.value)" />
             </div>
             <button class="icon-btn" title="Eyedropper" onclick="activateEyedropper()">
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m2 22 1-1h3l9-9"/><path d="M3 21v-3l9-9"/><path d="m15 6 3.4-3.4a2.1 2.1 0 1 1 3 3L18 9l.4.4a2.1 2.1 0 1 1-3 3l-3.8-3.8a2.1 2.1 0 1 1 3-3l.4.4Z"/></svg>
@@ -493,33 +350,13 @@
         </div>
       </div>
 
-      <!-- Auto-Extracted Photo Colours -->
+      <!-- Photo Colours -->
       <div id="photoSec" style="display:none;">
         <div class="sec-lbl"><span>Photo Colours</span><small>From screenshot</small></div>
-        <div class="tray">
-          <div class="dots-grid" id="photoDots"></div>
-        </div>
+        <div class="tray"><div class="dots-grid" id="photoDots"></div></div>
       </div>
 
-      <!-- 2. Layout & Aspect Ratio -->
-      <div>
-        <div class="sec-lbl"><span>Frame Layout</span></div>
-        <div class="seg">
-          <button class="active" data-layout="offset" onclick="setLayout('offset', this)">Offset</button>
-          <button data-layout="float" onclick="setLayout('float', this)">Center</button>
-          <button data-layout="browser" onclick="setLayout('browser', this)">Browser</button>
-        </div>
-        <div style="margin-top:8px;">
-          <select class="ctrl-sel" onchange="setRatio(this.value)">
-            <option value="1600x1000">16:10 · Portfolio Card (1600×1000)</option>
-            <option value="1920x1080">16:9 · LinkedIn / Banner (1920×1080)</option>
-            <option value="1600x1200">4:3 · Classic (1600×1200)</option>
-            <option value="1400x1400">1:1 · Square (1400×1400)</option>
-          </select>
-        </div>
-      </div>
-
-      <!-- 3. Corner Ribbon / Floating Badge (Timmo & Stick It Up Style!) -->
+      <!-- Corner Ribbon / Pill -->
       <div>
         <div class="sec-lbl"><span>Corner Ribbon / Badge</span><small>Optional</small></div>
         <div class="seg" style="margin-bottom:8px;">
@@ -528,35 +365,37 @@
           <button data-badge="pill" onclick="setBadgeStyle('pill', this)">Pill</button>
         </div>
         <div id="badgeOpts" style="display:none;flex-direction:column;gap:8px;">
-          <input type="text" id="badgeTxtIn" placeholder="e.g. Live · 800+ users · Open Source" value="Live on Vercel" oninput="state.badgeText=this.value; render();" />
+          <input type="text" placeholder="e.g. Live · 800+ users · Open Source" value="Live on Vercel" oninput="state.badgeText=this.value; render();" />
           <div class="dots-grid" id="ribbonColors"></div>
         </div>
       </div>
 
-      <!-- 4. Framing Sliders -->
+      <!-- Sliders & Ratio -->
       <div style="display:flex;flex-direction:column;gap:10px;">
-        <div class="sec-lbl" style="margin-bottom:0;"><span>Adjust Frame</span></div>
+        <select class="ctrl-sel" onchange="setRatio(this.value)">
+          <option value="1600x1000">16:10 · Portfolio Card</option>
+          <option value="1920x1080">16:9 · LinkedIn Banner</option>
+          <option value="1600x1200">4:3 · Classic</option>
+          <option value="1400x1400">1:1 · Square</option>
+        </select>
         <div class="slider-row">
           <div class="slider-top"><span>Zoom</span><span id="zoomVal">1.00x</span></div>
           <input type="range" id="zoomIn" min="0.85" max="2.2" step="0.02" value="1.0" oninput="state.zoom=+this.value; render();" />
         </div>
         <div class="slider-row">
-          <div class="slider-top"><span>Offset Margin</span><span id="padVal">130px</span></div>
-          <input type="range" id="padIn" min="40" max="240" step="5" value="130" oninput="state.pad=+this.value; render();" />
+          <div class="slider-top"><span>Margin</span><span id="padVal">125px</span></div>
+          <input type="range" id="padIn" min="40" max="220" step="5" value="125" oninput="state.pad=+this.value; render();" />
         </div>
         <div class="slider-row">
           <div class="slider-top"><span>Corner Radius</span><span id="radVal">24px</span></div>
-          <input type="range" id="radIn" min="0" max="44" step="2" value="24" oninput="state.radius=+this.value; render();" />
+          <input type="range" id="radIn" min="0" max="42" step="2" value="24" oninput="state.radius=+this.value; render();" />
         </div>
       </div>
     </aside>
 
-    <!-- Clean Spacious Preview Stage -->
     <main id="dropZone">
       <div class="stage-box">
         <canvas id="cv" width="1600" height="1000"></canvas>
-
-        <!-- Clean Centered Controls (Ref 1 Layout) -->
         <div class="action-bar">
           <button class="btn-outline" onclick="resetView()">↻ Reset</button>
           <button class="btn-outline" onclick="document.getElementById('fileIn').click()">↑ Upload</button>
@@ -565,7 +404,7 @@
           <button class="btn-solid" onclick="downloadPng()">↓ Download</button>
         </div>
         <div style="font-size:11.5px;color:var(--muted);text-align:center;">
-          Tip: Press <b>Ctrl + V</b> to paste a screenshot or drag inside the card to pan.
+          Press <b>Ctrl + V</b> to paste a screenshot · Click the 5 Design buttons on the left to preview completely different layouts!
         </div>
       </div>
       <input id="fileIn" type="file" accept="image/*" />
@@ -573,42 +412,40 @@
   </div>
 
   <script>
-    // Fresh vibrant presets inspired by Timmo, Stick It Up, CipherX, ByteX & RepPYQ
     const PALETTES = [
-      ["#bef264", "#65a30d", "#ecfccb"], // Timmo Fresh Lime
-      ["#3b82f6", "#1d4ed8", "#93c5fd"], // Stick It Up / CipherX Blue
+      ["#bef264", "#65a30d", "#ecfccb"], // Timmo Lime
+      ["#3b82f6", "#1d4ed8", "#93c5fd"], // Stick It Up Blue
       ["#10b981", "#047857", "#6ee7b7"], // RepPYQ Emerald
       ["#8b5cf6", "#4338ca", "#c4b5fd"], // ByteX Violet
-      ["#fb923c", "#ea580c", "#fde047"], // RAG Sunset Orange
-      ["#06b6d4", "#0f766e", "#67e8f9"], // Aqua Cyan
+      ["#fb923c", "#ea580c", "#fde047"], // Sunset Orange
+      ["#06b6d4", "#0f766e", "#67e8f9"], // Aqua Teal
       ["#f43f5e", "#be123c", "#fda4af"], // Coral Rose
       ["#1e293b", "#0f172a", "#38bdf8"], // Midnight Slate
-      ["#f8fafc", "#e2e8f0", "#ffffff"], // Crisp White
+      ["#f8fafc", "#e2e8f0", "#ffffff"], // Crisp Paper
     ];
 
     const RIBBON_PALETTES = [
-      ["#facc15", "#0f172a"], // Timmo Gold + Ink
-      ["#34d399", "#064e3b"], // Mint Live
-      ["#38bdf8", "#0c4a6e"], // Sky Blue
-      ["#0f172a", "#ffffff"], // Sleek Black
-      ["#ffffff", "#0f172a"], // Crisp White
-      ["#fb7185", "#ffffff"], // Rose
+      ["#facc15", "#0f172a"], ["#34d399", "#064e3b"], ["#38bdf8", "#0c4a6e"],
+      ["#0f172a", "#ffffff"], ["#ffffff", "#0f172a"], ["#fb7185", "#ffffff"],
     ];
 
     const state = {
       width: 1600,
       height: 1000,
+      design: "offset", // 'offset' | 'tilt' | 'split' | 'duo' | 'stack'
       c1: "#3b82f6",
       c2: "#1d4ed8",
       c3: "#93c5fd",
       activeStop: "c1",
       hsv: { h: 217, s: 0.76, v: 0.96 },
-      layout: "offset",
       zoom: 1.0,
-      pad: 130,
+      pad: 125,
       radius: 24,
       panX: 0,
       panY: 99999,
+      splitTitle: "RepPYQ",
+      splitSub: "Spot repeated SPPU PYQs and export unit-wise PDFs.",
+      splitTag: "SPPU 2019 · Live",
       badgeStyle: "none",
       badgeText: "Live on Vercel",
       ribbonBg: "#facc15",
@@ -620,21 +457,16 @@
     const cv = document.getElementById("cv");
     const ctx = cv.getContext("2d");
 
-    // --- Live 12-Hr IST Clock ---
+    // Clock & Wave Theme
     function updateClock() {
       const t = new Intl.DateTimeFormat("en-IN", {
-        timeZone: "Asia/Kolkata",
-        hour: "2-digit",
-        minute: "2-digit",
-        second: "2-digit",
-        hour12: true,
+        timeZone: "Asia/Kolkata", hour: "2-digit", minute: "2-digit", second: "2-digit", hour12: true,
       }).format(new Date()).toUpperCase();
       document.getElementById("istClock").textContent = "IST · " + t;
     }
     updateClock();
     setInterval(updateClock, 1000);
 
-    // --- White-Default Wave Theme Switcher ---
     function syncThemeIcon() {
       const isDark = document.documentElement.classList.contains("dark");
       document.getElementById("themeIcon").innerHTML = isDark
@@ -664,7 +496,7 @@
       }).catch(() => {});
     }
 
-    // --- Color Helpers ---
+    // Color Helpers
     function hexToRgb(hex) {
       const m = /^#?([0-9a-f]{6})$/i.exec(hex.trim());
       if (!m) return [59, 130, 246];
@@ -706,8 +538,14 @@
       const f = (n) => l - a * Math.max(-1, Math.min(k(n) - 3, Math.min(9 - k(n), 1)));
       return rgbToHex(f(0) * 255, f(8) * 255, f(4) * 255);
     }
+    function isLightBg() {
+      const [r1, g1, b1] = hexToRgb(state.c1);
+      const [r2, g2, b2] = hexToRgb(state.c2);
+      const lum = ((0.299 * r1 + 0.587 * g1 + 0.114 * b1) + (0.299 * r2 + 0.587 * g2 + 0.114 * b2)) / 2;
+      return lum > 155;
+    }
 
-    // Populate Fresh Swatches
+    // Swatches
     const palDots = document.getElementById("paletteDots");
     PALETTES.forEach(([a, b, c], idx) => {
       const btn = document.createElement("button");
@@ -717,8 +555,7 @@
         document.querySelectorAll("#paletteDots .dot").forEach(d => d.classList.remove("active"));
         btn.classList.add("active");
         state.c1 = a; state.c2 = b; state.c3 = c;
-        selectStop("c1");
-        render();
+        selectStop("c1"); render();
       };
       palDots.appendChild(btn);
     });
@@ -731,8 +568,7 @@
       btn.onclick = () => {
         document.querySelectorAll("#ribbonColors .dot").forEach(d => d.classList.remove("active"));
         btn.classList.add("active");
-        state.ribbonBg = bg; state.ribbonFg = fg;
-        render();
+        state.ribbonBg = bg; state.ribbonFg = fg; render();
       };
       ribDots.appendChild(btn);
     });
@@ -744,79 +580,55 @@
       document.getElementById("svBox").style.background =
         `linear-gradient(to top, #000, transparent), linear-gradient(to right, #fff, hsl(${h}, 100%, 50%))`;
       const svH = document.getElementById("svHandle");
-      svH.style.left = (s * 100) + "%";
-      svH.style.top = ((1 - v) * 100) + "%";
-      svH.style.background = hex;
-
+      svH.style.left = (s * 100) + "%"; svH.style.top = ((1 - v) * 100) + "%"; svH.style.background = hex;
       const hH = document.getElementById("hueHandle");
-      hH.style.left = ((h / 360) * 100) + "%";
-      hH.style.background = `hsl(${h}, 100%, 50%)`;
-
+      hH.style.left = ((h / 360) * 100) + "%"; hH.style.background = `hsl(${h}, 100%, 50%)`;
       document.getElementById("hexIn").value = hex.toUpperCase();
       document.getElementById("hexDot").style.background = hex;
       document.getElementById("stop1").style.background = state.c1;
       document.getElementById("stop2").style.background = state.c2;
       document.getElementById("stop3").style.background = state.c3;
     }
-
     function selectStop(key) {
       state.activeStop = key;
-      ["stop1", "stop2", "stop3"].forEach((id, i) => {
-        document.getElementById(id).classList.toggle("active", `c${i + 1}` === key);
-      });
+      ["stop1", "stop2", "stop3"].forEach((id, i) => document.getElementById(id).classList.toggle("active", `c${i + 1}` === key));
       const [r, g, b] = hexToRgb(state[key]);
       state.hsv = rgbToHsv(r, g, b);
       updatePickerUI();
     }
-
     function applyHex(hex) {
       state[state.activeStop] = hex;
       const [r, g, b] = hexToRgb(hex);
       state.hsv = rgbToHsv(r, g, b);
-      updatePickerUI();
-      render();
+      updatePickerUI(); render();
     }
-
-    function togglePicker() {
-      document.getElementById("pickerCard").classList.toggle("open");
-    }
-
+    function togglePicker() { document.getElementById("pickerCard").classList.toggle("open"); }
     function onHexTyped(val) {
       const clean = val.startsWith("#") ? val : "#" + val;
       if (/^#[0-9A-Fa-f]{6}$/.test(clean)) applyHex(clean);
     }
+    function swapColors() { [state.c1, state.c2] = [state.c2, state.c1]; selectStop(state.activeStop); render(); }
 
-    function swapColors() {
-      [state.c1, state.c2] = [state.c2, state.c1];
-      selectStop(state.activeStop);
-      render();
-    }
-
-    // SV + Hue Drag Handlers
-    const svBox = document.getElementById("svBox");
-    let svDrag = false;
+    const svBox = document.getElementById("svBox"); let svDrag = false;
     function moveSV(e) {
       const r = svBox.getBoundingClientRect();
       state.hsv.s = Math.max(0, Math.min(1, (e.clientX - r.left) / r.width));
       state.hsv.v = Math.max(0, Math.min(1, 1 - (e.clientY - r.top) / r.height));
       const [rr, gg, bb] = hsvToRgb(state.hsv.h, state.hsv.s, state.hsv.v);
       state[state.activeStop] = rgbToHex(rr, gg, bb);
-      updatePickerUI();
-      render();
+      updatePickerUI(); render();
     }
     svBox.addEventListener("pointerdown", (e) => { svDrag = true; svBox.setPointerCapture(e.pointerId); moveSV(e); });
     svBox.addEventListener("pointermove", (e) => { if (svDrag) moveSV(e); });
     svBox.addEventListener("pointerup", () => { svDrag = false; });
 
-    const hueBar = document.getElementById("hueBar");
-    let hueDrag = false;
+    const hueBar = document.getElementById("hueBar"); let hueDrag = false;
     function moveHue(e) {
       const r = hueBar.getBoundingClientRect();
       state.hsv.h = Math.max(0, Math.min(360, ((e.clientX - r.left) / r.width) * 360));
       const [rr, gg, bb] = hsvToRgb(state.hsv.h, state.hsv.s, state.hsv.v);
       state[state.activeStop] = rgbToHex(rr, gg, bb);
-      updatePickerUI();
-      render();
+      updatePickerUI(); render();
     }
     hueBar.addEventListener("pointerdown", (e) => { hueDrag = true; hueBar.setPointerCapture(e.pointerId); moveHue(e); });
     hueBar.addEventListener("pointermove", (e) => { if (hueDrag) moveHue(e); });
@@ -830,20 +642,14 @@
           return;
         } catch { return; }
       }
-      state.pickingCanvas = true;
-      cv.style.cursor = "crosshair";
+      state.pickingCanvas = true; cv.style.cursor = "crosshair";
     }
 
-    // --- Smart Zero-Backend Photo Colour Extractor & Auto-Color ---
     function extractAndMatchColors(img, applyAuto = true) {
-      const off = document.createElement("canvas");
-      off.width = 48; off.height = 48;
-      const octx = off.getContext("2d");
-      octx.drawImage(img, 0, 0, 48, 48);
+      const off = document.createElement("canvas"); off.width = 48; off.height = 48;
+      const octx = off.getContext("2d"); octx.drawImage(img, 0, 0, 48, 48);
       const data = octx.getImageData(0, 0, 48, 48).data;
-
-      const bins = new Map();
-      let lumSum = 0;
+      const bins = new Map(); let lumSum = 0;
       for (let i = 0; i < data.length; i += 4) {
         const r = data[i], g = data[i + 1], b = data[i + 2];
         lumSum += 0.299 * r + 0.587 * g + 0.114 * b;
@@ -852,44 +658,30 @@
         cur.r += r; cur.g += g; cur.b += b; cur.count += 1;
         bins.set(key, cur);
       }
-
       const sorted = Array.from(bins.values())
-        .map((e) => {
-          const r = e.r / e.count, g = e.g / e.count, b = e.b / e.count;
-          return { r, g, b, count: e.count, hsv: rgbToHsv(r, g, b) };
-        })
+        .map((e) => ({ r: e.r / e.count, g: e.g / e.count, b: e.b / e.count, count: e.count, hsv: rgbToHsv(e.r / e.count, e.g / e.count, e.b / e.count) }))
         .sort((a, b) => b.count - a.count);
 
       const distinct = [];
       for (const item of sorted) {
         if (!distinct.some((d) => Math.hypot(d.r - item.r, d.g - item.g, d.b - item.b) < 46)) {
-          distinct.push(item);
-          if (distinct.length === 6) break;
+          distinct.push(item); if (distinct.length === 6) break;
         }
       }
-
-      const sec = document.getElementById("photoSec");
-      const wrap = document.getElementById("photoDots");
+      const sec = document.getElementById("photoSec"), wrap = document.getElementById("photoDots");
       wrap.innerHTML = "";
       if (distinct.length) {
         sec.style.display = "block";
         distinct.forEach((d) => {
           const hex = rgbToHex(d.r, d.g, d.b);
-          const b = document.createElement("button");
-          b.className = "dot";
-          b.style.background = hex;
-          b.title = hex.toUpperCase();
-          b.onclick = () => applyHex(hex);
-          wrap.appendChild(b);
+          const b = document.createElement("button"); b.className = "dot"; b.style.background = hex;
+          b.onclick = () => applyHex(hex); wrap.appendChild(b);
         });
       }
-
       if (applyAuto) {
         const avgLum = lumSum / (data.length / 4);
-        const accents = sorted
-          .filter((c) => c.hsv.s > 0.28 && c.hsv.v > 0.28)
+        const accents = sorted.filter((c) => c.hsv.s > 0.28 && c.hsv.v > 0.28)
           .sort((a, b) => (b.hsv.s * Math.sqrt(b.count)) - (a.hsv.s * Math.sqrt(a.count)));
-
         if (accents.length > 0) {
           const hue = accents[0].hsv.h;
           state.c1 = hslToHex(hue, 84, 58);
@@ -903,19 +695,15 @@
       }
     }
 
-    function smartAutoColor() {
-      if (!state.img) return;
-      extractAndMatchColors(state.img, true);
-      render();
-    }
+    function smartAutoColor() { if (state.img) { extractAndMatchColors(state.img, true); render(); } }
 
-    function setLayout(mode, btn) {
-      state.layout = mode;
-      document.querySelectorAll("[data-layout]").forEach(b => b.classList.remove("active"));
+    function setDesign(d, btn) {
+      state.design = d;
+      document.querySelectorAll(".design-btn").forEach(b => b.classList.remove("active"));
       btn.classList.add("active");
+      document.getElementById("splitInputs").style.display = d === "split" ? "flex" : "none";
       render();
     }
-
     function setBadgeStyle(style, btn) {
       state.badgeStyle = style;
       document.querySelectorAll("[data-badge]").forEach(b => b.classList.remove("active"));
@@ -923,29 +711,80 @@
       document.getElementById("badgeOpts").style.display = style === "none" ? "none" : "flex";
       render();
     }
-
     function setRatio(val) {
       const [w, h] = val.split("x").map(Number);
-      state.width = w; state.height = h;
-      cv.width = w; cv.height = h;
-      render();
+      state.width = w; state.height = h; cv.width = w; cv.height = h; render();
     }
-
     function alignTopLeft() { state.panX = 99999; state.panY = 99999; render(); }
-    function resetView() {
-      state.zoom = 1.0; state.panX = 0; state.panY = 99999;
-      document.getElementById("zoomIn").value = 1.0;
-      render();
-    }
+    function resetView() { state.zoom = 1.0; state.panX = 0; state.panY = 99999; document.getElementById("zoomIn").value = 1.0; render(); }
 
     function rr(x, y, w, h, r) {
       ctx.beginPath();
-      ctx.moveTo(x + r, y);
-      ctx.arcTo(x + w, y, x + w, y + h, r);
-      ctx.arcTo(x + w, y + h, x, y + h, r);
-      ctx.arcTo(x, y + h, x, y, r);
-      ctx.arcTo(x, y, x + w, y, r);
-      ctx.closePath();
+      ctx.moveTo(x + r, y); ctx.arcTo(x + w, y, x + w, y + h, r);
+      ctx.arcTo(x + w, y + h, x, y + h, r); ctx.arcTo(x, y + h, x, y, r);
+      ctx.arcTo(x, y, x + w, y, r); ctx.closePath();
+    }
+
+    function drawShotInsideRect(fx, fy, fw, fh, visW, visH, radius, macBar = false) {
+      ctx.save();
+      rr(fx, fy, fw, fh, radius);
+      ctx.clip();
+
+      let contentY = fy, contentH = visH;
+      if (macBar) {
+        const barH = 44;
+        ctx.fillStyle = "#161a23";
+        ctx.fillRect(fx, fy, fw, barH);
+        ctx.fillStyle = "rgba(255,255,255,0.08)";
+        ctx.fillRect(fx, fy + barH - 1, fw, 1);
+        ["#ef4444", "#f59e0b", "#10b981"].forEach((col, i) => {
+          ctx.fillStyle = col;
+          ctx.beginPath(); ctx.arc(fx + 24 + i * 18, fy + barH / 2, 5.5, 0, Math.PI * 2); ctx.fill();
+        });
+        contentY += barH;
+        contentH -= barH;
+      }
+
+      if (state.img) {
+        const iw = state.img.width, ih = state.img.height;
+        const scale = Math.max(visW / iw, contentH / ih) * state.zoom;
+        const dw = iw * scale, dh = ih * scale;
+        const maxX = Math.max(0, (dw - visW) / 2), maxY = Math.max(0, (dh - contentH) / 2);
+        state.panX = Math.max(-maxX, Math.min(maxX, state.panX));
+        state.panY = Math.max(-maxY, Math.min(maxY, state.panY));
+        ctx.drawImage(state.img, fx + (visW - dw) / 2 + state.panX, contentY + (contentH - dh) / 2 + state.panY, dw, dh);
+      } else {
+        ctx.fillStyle = "#ffffff";
+        ctx.fillRect(fx, contentY, fw, contentH + 60);
+        ctx.fillStyle = "#0f172a";
+        ctx.font = "700 28px -apple-system, Inter, sans-serif";
+        ctx.textAlign = "center";
+        ctx.fillText("Paste (Ctrl + V) or Upload Screenshot", fx + visW / 2, contentY + contentH / 2 - 8);
+        ctx.fillStyle = "#64748b";
+        ctx.font = "500 17px -apple-system, Inter, sans-serif";
+        ctx.fillText("Switch between all 5 designs on the left", fx + visW / 2, contentY + contentH / 2 + 24);
+      }
+      ctx.restore();
+
+      rr(fx, fy, fw, fh, radius);
+      ctx.strokeStyle = "rgba(255,255,255,0.45)";
+      ctx.lineWidth = 2;
+      ctx.stroke();
+    }
+
+    function wrapTextLines(text, maxWidth, font) {
+      ctx.font = font;
+      const words = text.split(/\s+/);
+      const lines = [];
+      let cur = "";
+      for (const w of words) {
+        const test = cur ? cur + " " + w : w;
+        if (ctx.measureText(test).width > maxWidth && cur) {
+          lines.push(cur); cur = w;
+        } else { cur = test; }
+      }
+      if (cur) lines.push(cur);
+      return lines;
     }
 
     function render() {
@@ -956,134 +795,172 @@
       const W = state.width, H = state.height;
       ctx.clearRect(0, 0, W, H);
 
-      // Fresh Multi-Glow Backdrop (Timmo & Stick It Up inspired)
+      // Gradient Backdrop
       const bg = ctx.createLinearGradient(0, 0, W, H);
-      bg.addColorStop(0, state.c1);
-      bg.addColorStop(1, state.c2);
-      ctx.fillStyle = bg;
-      ctx.fillRect(0, 0, W, H);
+      bg.addColorStop(0, state.c1); bg.addColorStop(1, state.c2);
+      ctx.fillStyle = bg; ctx.fillRect(0, 0, W, H);
 
-      const g1 = ctx.createRadialGradient(W * 0.12, H * 0.12, 20, W * 0.12, H * 0.12, W * 0.55);
-      g1.addColorStop(0, state.c3);
-      g1.addColorStop(1, "rgba(255,255,255,0)");
-      ctx.globalAlpha = 0.45;
-      ctx.fillStyle = g1;
-      ctx.fillRect(0, 0, W, H);
-      ctx.globalAlpha = 1;
+      const g1 = ctx.createRadialGradient(W * 0.14, H * 0.14, 20, W * 0.14, H * 0.14, W * 0.6);
+      g1.addColorStop(0, state.c3); g1.addColorStop(1, "rgba(255,255,255,0)");
+      ctx.globalAlpha = 0.45; ctx.fillStyle = g1; ctx.fillRect(0, 0, W, H); ctx.globalAlpha = 1;
 
-      // Frame Geometry
-      let fx, fy, fw, fh, visW, visH;
-      const pad = state.pad;
-      if (state.layout === "offset") {
-        fx = Math.round(pad * 1.05);
-        fy = Math.round(pad * 0.85);
-        fw = W - fx + 50;
-        fh = H - fy + 50;
-        visW = W - fx;
-        visH = H - fy;
-      } else {
-        fx = pad;
-        fy = Math.round(pad * 0.72);
-        fw = W - pad * 2;
-        fh = H - fy * 2;
-        visW = fw;
-        visH = fh;
+      const pad = state.pad, R = state.radius;
+
+      // === DESIGN 1: OFFSET ===
+      if (state.design === "offset") {
+        const fx = Math.round(pad * 1.05), fy = Math.round(pad * 0.85);
+        const fw = W - fx + 50, fh = H - fy + 50;
+        ctx.save();
+        ctx.shadowColor = "rgba(15,23,42,0.28)"; ctx.shadowBlur = 46; ctx.shadowOffsetX = -8; ctx.shadowOffsetY = 18;
+        rr(fx, fy, fw, fh, R); ctx.fillStyle = "#fff"; ctx.fill();
+        ctx.restore();
+        drawShotInsideRect(fx, fy, fw, fh, W - fx, H - fy, R, false);
       }
 
-      // Soft Studio Shadow
-      ctx.save();
-      ctx.shadowColor = "rgba(15, 23, 42, 0.28)";
-      ctx.shadowBlur = 46;
-      ctx.shadowOffsetX = state.layout === "offset" ? -8 : 0;
-      ctx.shadowOffsetY = 18;
-      rr(fx, fy, fw, fh, state.radius);
-      ctx.fillStyle = "#ffffff";
-      ctx.fill();
-      ctx.restore();
+      // === DESIGN 2: 3D ANGLED TILT ===
+      else if (state.design === "tilt") {
+        const fw = W - pad * 1.9, fh = H - pad * 1.5;
+        ctx.save();
+        ctx.translate(W / 2, H / 2 + 8);
+        ctx.rotate(-0.055);
+        ctx.shadowColor = "rgba(15,23,42,0.36)"; ctx.shadowBlur = 55; ctx.shadowOffsetY = 26;
+        rr(-fw / 2, -fh / 2, fw, fh, R); ctx.fillStyle = "#fff"; ctx.fill();
+        ctx.shadowColor = "transparent";
+        drawShotInsideRect(-fw / 2, -fh / 2, fw, fh, fw, fh, R, true);
+        ctx.restore();
+      }
 
-      // Card Clip & Screenshot
-      ctx.save();
-      rr(fx, fy, fw, fh, state.radius);
-      ctx.clip();
+      // === DESIGN 3: SPLIT EDITORIAL (LEFT TEXT + RIGHT PEEKING UI) ===
+      else if (state.design === "split") {
+        const light = isLightBg();
+        const fg = light ? "#0f172a" : "#ffffff";
+        const subFg = light ? "rgba(15,23,42,0.75)" : "rgba(255,255,255,0.82)";
+        const lx = 84, maxW = W * 0.36;
 
-      let contentY = fy, contentH = visH;
-      if (state.layout === "browser") {
-        const barH = 48;
-        ctx.fillStyle = "#f8fafc";
-        ctx.fillRect(fx, fy, fw, barH);
-        ctx.fillStyle = "#e2e8f0";
-        ctx.fillRect(fx, fy + barH - 1, fw, 1);
-        ["#ef4444", "#f59e0b", "#10b981"].forEach((col, i) => {
-          ctx.fillStyle = col;
-          ctx.beginPath();
-          ctx.arc(fx + 26 + i * 20, fy + barH / 2, 6, 0, Math.PI * 2);
+        // Tag Pill
+        const tag = (state.splitTag || "").trim();
+        let curY = H * 0.27;
+        if (tag) {
+          ctx.font = "700 18px -apple-system, Inter, sans-serif";
+          const tw = ctx.measureText(tag).width + 34;
+          rr(lx, curY, tw, 38, 19);
+          ctx.fillStyle = light ? "rgba(15,23,42,0.08)" : "rgba(255,255,255,0.18)";
           ctx.fill();
-        });
-        contentY += barH;
-        contentH -= barH;
+          ctx.fillStyle = fg;
+          ctx.textAlign = "left";
+          ctx.fillText(tag, lx + 17, curY + 25);
+          curY += 86;
+        }
+
+        // Bold Title
+        ctx.fillStyle = fg;
+        ctx.textAlign = "left";
+        const titleLines = wrapTextLines(state.splitTitle || "Project", maxW, "800 62px -apple-system, Inter, sans-serif");
+        ctx.font = "800 62px -apple-system, Inter, sans-serif";
+        titleLines.slice(0, 2).forEach((ln) => { ctx.fillText(ln, lx, curY); curY += 70; });
+
+        // Subtitle
+        curY += 6;
+        ctx.fillStyle = subFg;
+        const subLines = wrapTextLines(state.splitSub || "", maxW, "500 24px -apple-system, Inter, sans-serif");
+        ctx.font = "500 24px -apple-system, Inter, sans-serif";
+        subLines.slice(0, 3).forEach((ln) => { ctx.fillText(ln, lx, curY); curY += 34; });
+
+        // Right-side Peeking App Card
+        const fx = Math.round(W * 0.45), fy = Math.round(pad * 0.78);
+        const fw = W - fx + 50, fh = H - fy + 50;
+        ctx.save();
+        ctx.shadowColor = "rgba(15,23,42,0.34)"; ctx.shadowBlur = 50; ctx.shadowOffsetX = -12; ctx.shadowOffsetY = 18;
+        rr(fx, fy, fw, fh, R); ctx.fillStyle = "#fff"; ctx.fill();
+        ctx.restore();
+        drawShotInsideRect(fx, fy, fw, fh, W - fx, H - fy, R, false);
       }
 
-      if (state.img) {
-        const iw = state.img.width, ih = state.img.height;
-        const scale = Math.max(visW / iw, contentH / ih) * state.zoom;
-        const dw = iw * scale, dh = ih * scale;
-        const maxPanX = Math.max(0, (dw - visW) / 2);
-        const maxPanY = Math.max(0, (dh - contentH) / 2);
-        state.panX = Math.max(-maxPanX, Math.min(maxPanX, state.panX));
-        state.panY = Math.max(-maxPanY, Math.min(maxPanY, state.panY));
-        ctx.drawImage(state.img, fx + (visW - dw) / 2 + state.panX, contentY + (contentH - dh) / 2 + state.panY, dw, dh);
-      } else {
-        ctx.fillStyle = "#ffffff";
-        ctx.fillRect(fx, contentY, fw, contentH + 60);
-        ctx.fillStyle = "#0f172a";
-        ctx.font = "700 32px -apple-system, Inter, sans-serif";
-        ctx.textAlign = "center";
-        ctx.fillText("Paste (Ctrl + V) or Upload Screenshot", fx + visW / 2, contentY + contentH / 2 - 10);
-        ctx.fillStyle = "#64748b";
-        ctx.font = "500 18px -apple-system, Inter, sans-serif";
-        ctx.fillText("Colours & photo palette match automatically", fx + visW / 2, contentY + contentH / 2 + 26);
+      // === DESIGN 4: DESKTOP + FLOATING MOBILE DUO ===
+      else if (state.design === "duo") {
+        // Desktop Window Back-Left
+        const dfx = 76, dfy = 86, dfw = W * 0.76, dfh = H * 0.78;
+        ctx.save();
+        ctx.shadowColor = "rgba(15,23,42,0.28)"; ctx.shadowBlur = 44; ctx.shadowOffsetY = 18;
+        rr(dfx, dfy, dfw, dfh, R); ctx.fillStyle = "#fff"; ctx.fill();
+        ctx.restore();
+        drawShotInsideRect(dfx, dfy, dfw, dfh, dfw, dfh, R, true);
+
+        // Mobile Phone Front-Right
+        const pw = W * 0.23, ph = H * 0.70;
+        const px = W - pw - 68, py = H - ph - 52;
+        ctx.save();
+        ctx.shadowColor = "rgba(15,23,42,0.42)"; ctx.shadowBlur = 42; ctx.shadowOffsetY = 18;
+        rr(px, py, pw, ph, 36); ctx.fillStyle = "#0f172a"; ctx.fill();
+        ctx.restore();
+
+        // Phone inner screen
+        const bezel = 12;
+        const sx = px + bezel, sy = py + bezel, sw = pw - bezel * 2, sh = ph - bezel * 2;
+        ctx.save();
+        rr(sx, sy, sw, sh, 26); ctx.clip();
+        if (state.img) {
+          const sc = Math.max(sw / state.img.width, sh / state.img.height) * 1.15;
+          const dw = state.img.width * sc, dh = state.img.height * sc;
+          ctx.drawImage(state.img, sx + (sw - dw) / 2, sy, dw, dh);
+        } else {
+          ctx.fillStyle = "#f8fafc"; ctx.fillRect(sx, sy, sw, sh);
+        }
+        ctx.restore();
+
+        // Dynamic Island Notch
+        rr(px + pw / 2 - 42, py + 22, 84, 18, 9);
+        ctx.fillStyle = "#0f172a"; ctx.fill();
       }
-      ctx.restore();
 
-      // Subtle Glass Border
-      rr(fx, fy, fw, fh, state.radius);
-      ctx.strokeStyle = "rgba(255,255,255,0.45)";
-      ctx.lineWidth = 2;
-      ctx.stroke();
+      // === DESIGN 5: STACKED GLASS DECK ===
+      else if (state.design === "stack") {
+        const fw = W - pad * 2.2, fh = H - pad * 1.75;
+        const fx = (W - fw) / 2, fy = (H - fh) / 2 + 24;
 
-      // Optional Timmo-Style Diagonal Ribbon or Floating Pill
+        // Back Card 2
+        ctx.save();
+        ctx.translate(W / 2, fy + fh / 2 - 34);
+        ctx.rotate(-0.045);
+        rr(-fw / 2, -fh / 2, fw, fh, R);
+        ctx.fillStyle = "rgba(255,255,255,0.28)"; ctx.fill();
+        ctx.restore();
+
+        // Back Card 1
+        ctx.save();
+        ctx.translate(W / 2, fy + fh / 2 - 16);
+        ctx.rotate(0.025);
+        rr(-fw / 2, -fh / 2, fw, fh, R);
+        ctx.fillStyle = "rgba(255,255,255,0.52)"; ctx.fill();
+        ctx.restore();
+
+        // Foreground Crisp Card
+        ctx.save();
+        ctx.shadowColor = "rgba(15,23,42,0.3)"; ctx.shadowBlur = 46; ctx.shadowOffsetY = 18;
+        rr(fx, fy, fw, fh, R); ctx.fillStyle = "#fff"; ctx.fill();
+        ctx.restore();
+        drawShotInsideRect(fx, fy, fw, fh, fw, fh, R, true);
+      }
+
+      // Optional Ribbon or Pill Badge
       const bTxt = (state.badgeText || "").trim();
       if (bTxt && state.badgeStyle === "ribbon") {
         ctx.save();
-        ctx.translate(W - 115, 115);
-        ctx.rotate(Math.PI / 4);
-        ctx.shadowColor = "rgba(0,0,0,0.18)";
-        ctx.shadowBlur = 14;
-        ctx.fillStyle = state.ribbonBg;
-        ctx.fillRect(-260, -28, 520, 56);
-        ctx.shadowColor = "transparent";
-        ctx.fillStyle = state.ribbonFg;
+        ctx.translate(W - 115, 115); ctx.rotate(Math.PI / 4);
+        ctx.shadowColor = "rgba(0,0,0,0.18)"; ctx.shadowBlur = 14;
+        ctx.fillStyle = state.ribbonBg; ctx.fillRect(-260, -28, 520, 56);
+        ctx.shadowColor = "transparent"; ctx.fillStyle = state.ribbonFg;
         ctx.font = "700 24px -apple-system, Inter, sans-serif";
-        ctx.textAlign = "center";
-        ctx.textBaseline = "middle";
-        ctx.fillText(bTxt, 0, 1);
+        ctx.textAlign = "center"; ctx.textBaseline = "middle"; ctx.fillText(bTxt, 0, 1);
         ctx.restore();
       } else if (bTxt && state.badgeStyle === "pill") {
         ctx.save();
         ctx.font = "700 20px -apple-system, Inter, sans-serif";
-        const pw = ctx.measureText(bTxt).width + 44;
-        const ph = 44;
-        const bx = 42, by = 42;
-        ctx.shadowColor = "rgba(15, 23, 42, 0.2)";
-        ctx.shadowBlur = 16;
-        rr(bx, by, pw, ph, 22);
-        ctx.fillStyle = state.ribbonBg;
-        ctx.fill();
-        ctx.shadowColor = "transparent";
-        ctx.fillStyle = state.ribbonFg;
-        ctx.textAlign = "center";
-        ctx.textBaseline = "middle";
-        ctx.fillText(bTxt, bx + pw / 2, by + ph / 2 + 1);
+        const pw = ctx.measureText(bTxt).width + 44, ph = 44, bx = 42, by = 42;
+        ctx.shadowColor = "rgba(15, 23, 42, 0.2)"; ctx.shadowBlur = 16;
+        rr(bx, by, pw, ph, 22); ctx.fillStyle = state.ribbonBg; ctx.fill();
+        ctx.shadowColor = "transparent"; ctx.fillStyle = state.ribbonFg;
+        ctx.textAlign = "center"; ctx.textBaseline = "middle"; ctx.fillText(bTxt, bx + pw / 2, by + ph / 2 + 1);
         ctx.restore();
       }
     }
@@ -1093,11 +970,8 @@
       reader.onload = (ev) => {
         const im = new Image();
         im.onload = () => {
-          state.img = im;
-          state.panX = 0;
-          state.panY = 99999;
-          extractAndMatchColors(im, true);
-          render();
+          state.img = im; state.panX = 0; state.panY = 99999;
+          extractAndMatchColors(im, true); render();
         };
         im.src = ev.target.result;
       };
@@ -1111,10 +985,8 @@
         const cx = Math.floor(((e.clientX - rect.left) / rect.width) * cv.width);
         const cy = Math.floor(((e.clientY - rect.top) / rect.height) * cv.height);
         const px = ctx.getImageData(cx, cy, 1, 1).data;
-        state.pickingCanvas = false;
-        cv.style.cursor = "grab";
-        applyHex(rgbToHex(px[0], px[1], px[2]));
-        return;
+        state.pickingCanvas = false; cv.style.cursor = "grab";
+        applyHex(rgbToHex(px[0], px[1], px[2])); return;
       }
       if (!state.img) { document.getElementById("fileIn").click(); return; }
       dragging = true; lastX = e.clientX; lastY = e.clientY;
@@ -1125,14 +997,12 @@
       const rect = cv.getBoundingClientRect();
       state.panX += (e.clientX - lastX) * (cv.width / rect.width);
       state.panY += (e.clientY - lastY) * (cv.height / rect.height);
-      lastX = e.clientX; lastY = e.clientY;
-      render();
+      lastX = e.clientX; lastY = e.clientY; render();
     });
     cv.addEventListener("pointerup", () => { dragging = false; });
 
     document.getElementById("fileIn").onchange = (e) => {
-      if (e.target.files[0]) loadImageFile(e.target.files[0]);
-      e.target.value = "";
+      if (e.target.files[0]) loadImageFile(e.target.files[0]); e.target.value = "";
     };
     const dropZone = document.getElementById("dropZone");
     dropZone.addEventListener("dragover", (e) => e.preventDefault());
@@ -1144,31 +1014,23 @@
     window.addEventListener("paste", (e) => {
       const items = e.clipboardData?.items || [];
       for (const item of items) {
-        if (item.type.startsWith("image/")) {
-          const f = item.getAsFile();
-          if (f) loadImageFile(f);
-          break;
-        }
+        if (item.type.startsWith("image/")) { const f = item.getAsFile(); if (f) loadImageFile(f); break; }
       }
     });
 
     function downloadPng() {
       const a = document.createElement("a");
-      a.download = "snapframe-card.png";
-      a.href = cv.toDataURL("image/png");
-      a.click();
+      a.download = `snapframe-${state.design}.png`;
+      a.href = cv.toDataURL("image/png"); a.click();
     }
-
     async function copyPng() {
       const btn = document.getElementById("copyBtn");
       cv.toBlob(async (blob) => {
         try {
           await navigator.clipboard.write([new ClipboardItem({ "image/png": blob })]);
-          btn.textContent = "Copied!";
-          setTimeout(() => (btn.textContent = "Copy"), 1500);
+          btn.textContent = "Copied!"; setTimeout(() => (btn.textContent = "Copy"), 1500);
         } catch {
-          btn.textContent = "Use Download";
-          setTimeout(() => (btn.textContent = "Copy"), 1500);
+          btn.textContent = "Use Download"; setTimeout(() => (btn.textContent = "Copy"), 1500);
         }
       });
     }
