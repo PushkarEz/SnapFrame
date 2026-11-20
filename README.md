@@ -1,1 +1,1 @@
-[# SnapFrame](https://snapframe-ez.vercel.app/)
+https://snapframe-ez.vercel.app/
